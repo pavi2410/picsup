@@ -11,7 +11,7 @@ mongoose.connect('mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retr
 then(()=>{console.log("DB connected")},(err)=>{console.log(err)});
 
 const app = express()
-const port = 3000
+const port = 3100
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -53,9 +53,8 @@ app.get('/images', (req, res) => {
       console.log('/images:', err)
       res.sendStatus(404)
       return
-    }
-    res.set('Content-Type', images[0].img.contentType);
-    res.send(images[0].img.data)
+    };
+    res.json({images: images.map(image => image.img.data) })
   })
 })
 
