@@ -61,7 +61,7 @@ function ModalOverlay({ setmodalOverlay }) {
           <label
             className="w-96 flex flex-col items-center px-4 py-6 bg-white font-bold rounded-md shadow-md tracking-wide uppercase border border-green cursor-pointer hover:bg-green-500 hover:text-white text-green-600 ease-linear transition-all duration-150">
             <i className="fas fa-cloud-upload-alt fa-3x"></i>
-            {images && <img src={URL.createObjectURL(images)}/>}
+            {images && <img className="max-h-64" src={URL.createObjectURL(images)}/>}
             <span className="mt-2 text-base leading-normal">{images ? images.name : "Select a image"}</span>
             <input type='file' className="hidden" onChange={(e)=>setImages(e.target.files[0])}/>
           </label>
