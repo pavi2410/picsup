@@ -99,12 +99,12 @@ function Body() {
   }, [])
 
   return (
-    <div className="m-8 grid md:grid-cols-3">
+    <div className="m-4 grid md:grid-cols-3 gap-x-6">
       {images ?
         images.map((image_id, i) => {
           return (
-            <div key={i} className="xs:w-full lg:w-5/6 h-auto mb-10 dark:bg-white">
-              <img src={`http://localhost:3100/image/${image_id}`} className="h-full" />
+            <div key={i} className="xs:w-full h-auto mb-10 dark:bg-white">
+              <img src={`http://localhost:3100/image/${image_id}`} className="object-cover rounded-xl h-auto" />
             </div>
           );
         })
