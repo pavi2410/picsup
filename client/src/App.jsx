@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import logo from './logo.svg'
 import './App.css'
 
 function App() {
@@ -38,10 +37,43 @@ function Header({ setmodalOverlay, modalOverlay }) {
 }
 
 function ModalOverlay({ setmodalOverlay }) {
+  const [images, setImages] = useState(null);
+  
+  const uploadFile = ()=>{
+    const formData = new FormData()
+    formData.append(
+      'uploaded_file',
+      images
+    )
+    fetch("http://localhost:3100/upload", {method: 'POST', formData})
+    .then(res => {
+      console.log("File Uploaded Sucessfully");
+      setImages(null);
+      setmodalOverlay(false);
+    })
+    .catch(err => console.log(err));
+  }
   return (
     <div className="absolute left-0 top-0 w-full h-full flex justify-center align-center">
-      <div className="p-8 bg-white m-auto shadow-xl rounded-xl">
-        Hii this is the modal
+      <div className="py-8 px-10 bg-white m-auto shadow-xl rounded-xl">
+        <p className="font-bold text-2xl mb-16">Add a new photo</p>
+        <div>
+          <input
+            onChange={(e)=>setImages(e.target.file[0])}
+            type="file"
+          />
+        </div>
+        <div className="flex items-center justify-end pt-6 border-t border-solid border-blueGray-200 rounded-b">
+          <button
+            className="text-gray-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+            onClick={() => setmodalOverlay(false)}
+          >
+            Close
+          </button>
+          <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={uploadFile}>
+            Upload
+          </button>
+        </div>
       </div>
     </div>
 
