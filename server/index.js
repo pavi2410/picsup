@@ -3,7 +3,8 @@ const path = require('path');
 const fs = require('fs/promises');
 const express = require('express');
 const mongoose = require('mongoose');
-var multer = require('multer');
+const multer = require('multer');
+const cors = require('cors')
 
 // ------- Setup -------
 
@@ -12,6 +13,8 @@ then(()=>{console.log("DB connected")},(err)=>{console.log(err)});
 
 const app = express()
 const port = 3100
+
+app.use(cors())
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -54,7 +57,7 @@ app.get('/images', (req, res) => {
       res.sendStatus(404)
       return
     };
-    res.json({images: images.map(image => image.img.data) })
+    res.json({images: images.map(image => image._id) })
   })
 })
 
