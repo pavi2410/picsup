@@ -19,7 +19,7 @@ function Header({ setmodalOverlay, modalOverlay }) {
     <nav className="flex flex-row justify-between p-8">
       <div className="flex flex-row items-center gap-x-4">
         <div>
-          <h1 className="font-bold text-xl">picsup</h1>
+          <h1 className="font-bold text-4xl">picsup</h1>
         </div>
         <div className="flex flex-row justify-center items-center rounded-xl border-2">
           <svg className="z-20 hidden w-4 h-4 ml-4 text-gray-500 pointer-events-none fill-current group-hover:text-gray-400 sm:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -45,7 +45,7 @@ function ModalOverlay({ setmodalOverlay }) {
       'uploaded_file',
       images
     )
-    fetch("http://localhost:3100/upload", {method: 'POST', formData})
+    fetch("http://localhost:3100/upload", {method: 'POST', body: formData})
     .then(res => {
       console.log("File Uploaded Sucessfully");
       setImages(null);
@@ -57,9 +57,9 @@ function ModalOverlay({ setmodalOverlay }) {
     <div className="absolute left-0 top-0 w-full h-full flex justify-center align-center">
       <div className="py-8 px-10 bg-white m-auto shadow-xl rounded-xl">
         <p className="font-bold text-2xl mb-16">Add a new photo</p>
-        <div>
-          <input
-            onChange={(e)=>setImages(e.target.file[0])}
+        <div className="pb-16">
+          <input className="border-gray-300 focus:ring-blue-600 block w-full overflow-hidden cursor-pointer border text-gray-800 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:border-transparent"
+            onChange={(e)=>setImages(e.target.files[0])}
             type="file"
           />
         </div>
@@ -97,7 +97,7 @@ function Body() {
         images.map((image_id, i) => {
           return (
             <div key={i} className="xs:w-full lg:w-5/6 h-auto mb-10 dark:bg-white">
-              <img src={`http://localhost:3100/image/${image_id}`} className="rounded-2xl" />
+              <img src={`http://localhost:3100/image/${image_id}`} className="rounded-2xl h-full" />
             </div>
           );
         })
