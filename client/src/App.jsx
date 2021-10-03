@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
 function App() {
   const [modalOverlay, setmodalOverlay] = useState(false);
+  const [loading, setLoading] = useState(true);
   return (
     <>
       <div className="md:mx-16">
-        <Header setmodalOverlay={setmodalOverlay}/>
-        <Body />
+        <Header setmodalOverlay={setmodalOverlay} />
+        <Body loading={loading} setLoading={setLoading} modalOverlay={modalOverlay} />
       </div>
-      {modalOverlay && <ModalOverlay setmodalOverlay={setmodalOverlay} />}
+      {modalOverlay && <ModalOverlay setmodalOverlay={setmodalOverlay} loading={loading} setLoading={setLoading} />}
     </>
   )
 }
@@ -39,31 +41,31 @@ function Header({ setmodalOverlay, modalOverlay }) {
 function ModalOverlay({ setmodalOverlay }) {
   const [file, setFile] = useState(null);
 
-  const uploadFile = ()=>{
+  const uploadFile = () => {
     const formData = new FormData()
     formData.append(
       'uploaded_file',
       file
     )
-    fetch("http://localhost:3100/upload", {method: 'POST', body: formData})
-    .then(res => {
-      console.log("File Uploaded Sucessfully");
-      setFile(null);
-      setmodalOverlay(false);
-    })
-    .catch(err => console.log(err));
+    fetch("http://localhost:3100/upload", { method: 'POST', body: formData })
+      .then(res => {
+        console.log("File Uploaded Sucessfully");
+        setFile(null);
+        setmodalOverlay(false);
+      })
+      .catch(err => console.log(err));
   }
   return (
-    <div className="absolute left-0 top-0 w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
-      <div className="py-8 px-10 bg-white m-auto shadow-xl rounded-xl">
+    <div className="fixed left-0 top-0 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
+      <div className="h-full w-full md:h-auto md:w-auto py-8 px-10 bg-white m-auto shadow-xl rounded-xl">
         <p className="font-bold text-2xl mb-16">Add a new photo</p>
         <div className="pb-16">
           <label
-            className="w-96 flex flex-col items-center px-4 py-6 bg-white font-bold rounded-md shadow-md tracking-wide uppercase border border-green cursor-pointer hover:bg-green-500 hover:text-white text-green-600 ease-linear transition-all duration-150">
+            className="md:w-96 flex flex-col items-center px-4 py-6 bg-white font-bold rounded-md shadow-md tracking-wide uppercase border border-green cursor-pointer hover:bg-green-500 hover:text-white text-green-600 ease-linear transition-all duration-150">
             <i className="fas fa-cloud-upload-alt fa-3x"></i>
-            {file && <img className="max-h-64" src={URL.createObjectURL(file)}/>}
+            {file && <img className="max-h-64" src={URL.createObjectURL(file)} />}
             <span className="mt-2 text-base leading-normal">{file ? file.name : "Select a image"}</span>
-            <input type='file' className="hidden" onChange={(e)=>setFile(e.target.files[0])}/>
+            <input type='file' className="hidden" onChange={(e) => setFile(e.target.files[0])} />
           </label>
           {/* <input className="border-gray-300 focus:ring-blue-600 block w-full overflow-hidden cursor-pointer border text-gray-800 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:border-transparent"
             aria-describedby="view_model_avatar_help" id="view_model_avatar" name="view_model[avatar]" }
@@ -87,8 +89,15 @@ function ModalOverlay({ setmodalOverlay }) {
   )
 }
 
-function Body() {
+function Body({ modalOverlay, loading, setLoading }) {
+  const [refresh, setRefresh] = useState(0)
   const [images, setImages] = useState([])
+
+  useEffect(() => {
+    if (modalOverlay == false) {
+      setRefresh(refresh + 1)
+    }
+  }, [modalOverlay])
 
   useEffect(() => {
     fetch("http://localhost:3100/images")
@@ -96,30 +105,35 @@ function Body() {
       .then(data => {
         setImages(data.images)
       })
-  }, [images])
+      .then(() => {
+        setLoading(false)
+      })
+  }, [refresh])
 
-  return (
-    <div className="m-4 grid md:grid-cols-3 gap-x-6">
+  if (loading)
+    return <Loader />
+  return (<ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
+    <Masonry gutter={24}>
       {images ?
         images.map((image_id, i) => {
           return (
-            <div key={i} className="xs:w-full h-auto mb-10 dark:bg-white">
-              <img src={`http://localhost:3100/image/${image_id}`} className="object-cover rounded-xl h-auto" />
+            <div key={i} >
+              <img src={`http://localhost:3100/image/${image_id}`} className="rounded-md w-full" />
             </div>
           );
         })
         : null
       }
+    </Masonry>
+  </ResponsiveMasonry>);
+}
+
+function Loader() {
+  return (
+    <div className="flex justify-center items-center">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" />
     </div>
   )
 }
 
 export default App
-
-/*
-https://tailwindcss.com/docs/background-color
-https://tailblocks.cc/
-https://www.tailwind-kit.com/components/header
-https://tailwindcomponents.com/component/responsive-header
-https://www.tailwindtoolbox.com/templates/responsive-header
-*/
