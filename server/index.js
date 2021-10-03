@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors')
+const logger = require('morgan')
 
 // ------- Setup -------
 
@@ -14,6 +15,7 @@ then(()=>{console.log("DB connected")},(err)=>{console.log(err)});
 const app = express()
 const port = 3100
 
+app.use(logger('dev'))
 app.use(cors())
 
 var storage = multer.diskStorage({
