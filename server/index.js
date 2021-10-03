@@ -81,7 +81,6 @@ app.post('/upload', upload.single('uploaded_file'), function (req, res) {
   }
 
   fs.readFile(req.file.path).then(file => {
-    console.log('upload', file)
     var obj = {
       name: req.file.originalname,
       img: {
@@ -95,7 +94,6 @@ app.post('/upload', upload.single('uploaded_file'), function (req, res) {
         res.status(500).send('Failed to store image')
         return
       }
-      console.log(resp);
       res.send("id: " + resp._id)
     });
   })

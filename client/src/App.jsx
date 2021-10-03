@@ -37,18 +37,18 @@ function Header({ setmodalOverlay, modalOverlay }) {
 }
 
 function ModalOverlay({ setmodalOverlay }) {
-  const [images, setImages] = useState(null);
+  const [file, setFile] = useState(null);
 
   const uploadFile = ()=>{
     const formData = new FormData()
     formData.append(
       'uploaded_file',
-      images
+      file
     )
     fetch("http://localhost:3100/upload", {method: 'POST', body: formData})
     .then(res => {
       console.log("File Uploaded Sucessfully");
-      setImages(null);
+      setFile(null);
       setmodalOverlay(false);
     })
     .catch(err => console.log(err));
@@ -61,9 +61,9 @@ function ModalOverlay({ setmodalOverlay }) {
           <label
             className="w-96 flex flex-col items-center px-4 py-6 bg-white font-bold rounded-md shadow-md tracking-wide uppercase border border-green cursor-pointer hover:bg-green-500 hover:text-white text-green-600 ease-linear transition-all duration-150">
             <i className="fas fa-cloud-upload-alt fa-3x"></i>
-            {images && <img className="max-h-64" src={URL.createObjectURL(images)}/>}
-            <span className="mt-2 text-base leading-normal">{images ? images.name : "Select a image"}</span>
-            <input type='file' className="hidden" onChange={(e)=>setImages(e.target.files[0])}/>
+            {file && <img className="max-h-64" src={URL.createObjectURL(file)}/>}
+            <span className="mt-2 text-base leading-normal">{file ? file.name : "Select a image"}</span>
+            <input type='file' className="hidden" onChange={(e)=>setFile(e.target.files[0])}/>
           </label>
           {/* <input className="border-gray-300 focus:ring-blue-600 block w-full overflow-hidden cursor-pointer border text-gray-800 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:border-transparent"
             aria-describedby="view_model_avatar_help" id="view_model_avatar" name="view_model[avatar]" }
@@ -96,7 +96,7 @@ function Body() {
       .then(data => {
         setImages(data.images)
       })
-  }, [])
+  }, [images])
 
   return (
     <div className="m-4 grid md:grid-cols-3 gap-x-6">
