@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
+const HOST = "http://localhost:4000"
+
 function App() {
   const [modalOverlay, setmodalOverlay] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ function ModalOverlay({ setmodalOverlay }) {
       'uploaded_file',
       file
     )
-    fetch("http://localhost:3100/upload", { method: 'POST', body: formData })
+    fetch("http://localhost:4000/upload", { method: 'POST', body: formData })
       .then(res => {
         console.log("File Uploaded Sucessfully");
         setFile(null);
@@ -100,7 +102,7 @@ function Body({ modalOverlay, loading, setLoading }) {
   }, [modalOverlay])
 
   useEffect(() => {
-    fetch("http://localhost:3100/images")
+    fetch(`${HOST}/images`)
       .then(res => res.json())
       .then(data => {
         setImages(data.images)
@@ -118,7 +120,7 @@ function Body({ modalOverlay, loading, setLoading }) {
         images.map((image_id, i) => {
           return (
             <div key={i} >
-              <img src={`http://localhost:3100/image/${image_id}`} className="rounded-md w-full" />
+              <img src={`${HOST}/image/${image_id}`} className="rounded-md w-full" />
             </div>
           );
         })
