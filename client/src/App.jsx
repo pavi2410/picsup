@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
-const HOST = "http://localhost:4000"
+const PORT = import.meta.env.PORT || 4000
+const HOST = `http://localhost:${PORT}`
 
 function App() {
   const [modalOverlay, setmodalOverlay] = useState(false);
