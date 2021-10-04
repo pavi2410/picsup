@@ -51,9 +51,9 @@ const Images = new mongoose.model('Image', imageSchema);
 
 // ------- Request handlers -------
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello World!')
+// })
 
 app.get('/images', (req, res) => {
   Images.find({})
