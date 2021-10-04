@@ -10,23 +10,25 @@ const logger = require('morgan')
 // ------- Setup -------
 
 mongoose.connect('mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retryWrites=true&w=majority').
-then(()=>{console.log("DB connected")},(err)=>{console.log(err)});
+  then(() => { console.log("DB connected") }, (err) => { console.log(err) });
 
 const app = express()
-const port = process.env.PORT || 3100
+const port = process.env.PORT || 4000
 
 app.use(logger('dev'))
 app.use(cors())
 
-app.use(express.static(path.resolve(__dirname, "../client/dist")))
+if (process.env.NODE_ENV == "production") {
+  app.use(express.static("client/dist"))
+}
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const tmpdir = path.join(os.tmpdir(), 'picsup')
-    fs.mkdir(tmpdir, {recursive:true})
-    .then(() => {
-      cb(null, tmpdir)
-    })
+    fs.mkdir(tmpdir, { recursive: true })
+      .then(() => {
+        cb(null, tmpdir)
+      })
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now())
@@ -55,19 +57,19 @@ app.get('/', (req, res) => {
 
 app.get('/images', (req, res) => {
   Images.find({})
-  .then((images, err) => {
-    if (err) {
-      console.log('/images:', err)
-      res.sendStatus(404)
-      return
-    };
-    res.json({images: images.map(image => image._id) })
-  })
+    .then((images, err) => {
+      if (err) {
+        console.log('/images:', err)
+        res.sendStatus(404)
+        return
+      };
+      res.json({ images: images.map(image => image._id) })
+    })
 })
 
 app.get('/image/:id', (req, res) => {
   // console.log({params: req.params})
-  Images.findById(req.params.id).then( (image, err) => {
+  Images.findById(req.params.id).then((image, err) => {
     if (err) {
       res.sendStatus(404);
       return;
@@ -80,7 +82,7 @@ app.get('/image/:id', (req, res) => {
 
 app.post('/upload', upload.single('uploaded_file'), function (req, res) {
   const file = req.file;
-  if(!file){
+  if (!file) {
     res.status(400).send("Please upload a file");
   }
 
