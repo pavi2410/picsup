@@ -13,10 +13,12 @@ mongoose.connect('mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retr
 then(()=>{console.log("DB connected")},(err)=>{console.log(err)});
 
 const app = express()
-const port = 3100
+const port = process.env.PORT || 3100
 
 app.use(logger('dev'))
 app.use(cors())
+
+app.use(express.static(path.resolve(__dirname, "../client/dist")))
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
