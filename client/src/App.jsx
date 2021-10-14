@@ -47,7 +47,7 @@ function ModalOverlay({ setmodalOverlay }) {
       'uploaded_file',
       file
     )
-    fetch("/upload", { method: 'POST', body: formData })
+    fetch("http://localhost:4000/upload", { method: 'POST', body: formData })
       .then(res => {
         console.log("File Uploaded Sucessfully");
         setFile(null);
@@ -100,7 +100,7 @@ function Body({ modalOverlay, loading, setLoading }) {
   }, [modalOverlay])
 
   useEffect(() => {
-    fetch("/images")
+    fetch("http://localhost:4000/images")
       .then(res => res.json())
       .then(data => {
         setImages(data.images)
@@ -117,8 +117,11 @@ function Body({ modalOverlay, loading, setLoading }) {
       {images ?
         images.map((image_id, i) => {
           return (
-            <div key={i} >
-              <img src={`/image/${image_id}`} className="rounded-md w-full" />
+            <div className="container" key={i} >
+              <img src={`http://localhost:4000/image/${image_id}`} className="rounded-md w-full" />
+              <button className="btn">
+                <div style={{color:"#EB5757", fontWeight:"500", fontSize:"18px", padding:"8px"}} className="text">delete</div>
+              </button>
             </div>
           );
         })
