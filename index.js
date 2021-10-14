@@ -49,10 +49,45 @@ var imageSchema = new mongoose.Schema({
 })
 const Images = new mongoose.model('Image', imageSchema);
 
+// var UserSchema = new mongoose.Schema({
+//   email: String,
+//   password: String,
+//   username: String
+// })
+// const User = new mongoose.model('user', UserSchema);
+
 // ------- Request handlers -------
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
+// })
+// app.post('/register',(req,res)=>{
+//   console.log(req.body);
+//   let user = User.findOne({email: req.body.email});
+//   if(!user) return res.status(400).send("User already exists");
+//   const makeuser = new User ({
+//     email: req.body.email,
+//     password: req.body.password,
+//     username: req.body.username
+//   })
+//   User.save(makeuser, (err, resp) => {
+//     if (err) {
+//       res.status(500).send('Failed to create User')
+//       return
+//     }
+//     res.send("User Registration Successful");
+//   })
+
+// })
+
+// app.get('/login', (req,res)=>{
+//   User.findOne({email: req.body.email, password: req.body.password})
+//   .then(res=>{
+//     res.status(200).send("Login Successful");
+//   })
+//   .catch(err=>{
+//     res.send("Some error occured while logging in. Please try again");
+//   })
 // })
 
 app.get('/images', (req, res) => {
