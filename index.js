@@ -105,11 +105,10 @@ app.get('/images', (req, res) => {
 app.get('/image/:id', (req, res) => {
   // console.log({params: req.params})
   Images.findById(req.params.id).then((image, err) => {
-    if (err) {
+    if (err || image==null) {
       res.sendStatus(404);
       return;
     }
-
     res.set('Content-Type', image.img.contentType)
     res.send(image.img.data)
   })
@@ -139,6 +138,17 @@ app.post('/upload', upload.single('uploaded_file'), function (req, res) {
     });
   })
 });
+
+app.delete('/image/:id', (req, res) => {
+  // console.log(req.params.id)
+  Images.findByIdAndRemove(req.params.id).then((image, err) => {
+    if (err || image==null) {
+      res.sendStatus(404);
+      return;
+    }
+    res.send("Image Deleted");
+  })
+})
 
 app.listen(port, () => {
   console.log(`picsup server listening at http://localhost:${port}`)
