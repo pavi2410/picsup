@@ -3,3 +3,25 @@
 body{
     font-family: 'Poppins', sans-serif;
 }
+.container{
+    position: relative;
+}
+.container img{
+    opacity: 1;
+    cursor: zoom-in;
+}
+.container:hover img{
+    opacity: 0.5;
+}
+.btn{
+    position: absolute;
+    opacity: 0;
+    left: 82%;
+    top: 3%;
+    border: 1px solid #EB5757;
+    box-sizing: border-box;
+    border-radius: 38px;
+}
+.container:hover .btn{
+    opacity: 1;
+}

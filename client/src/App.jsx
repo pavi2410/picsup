@@ -47,7 +47,7 @@ function ModalOverlay({ setmodalOverlay }) {
       'uploaded_file',
       file
     )
-    fetch("/upload", { method: 'POST', body: formData })
+    fetch("http://localhost:4000/upload", { method: 'POST', body: formData })
       .then(res => {
         console.log("File Uploaded Sucessfully");
         setFile(null);
@@ -93,14 +93,35 @@ function Body({ modalOverlay, loading, setLoading }) {
   const [refresh, setRefresh] = useState(0)
   const [images, setImages] = useState([])
 
+  //-----------For deleting image --------------------
+  const deleteImage = (image_id, e) =>{
+    // console.log(image_id);
+    const deleteMethod = {
+      method: 'DELETE',
+      headers: {
+       'Content-type': 'application/json; charset=UTF-8'
+      }
+     }
+    fetch(`http://localhost:4000/image/${image_id}`, deleteMethod)
+    .then(res => {
+      console.log("Image Sucessfully Deleted");
+      setRefresh(refresh + 1);
+    })
+    .catch(err => {
+      console.log(err + "Error occured! Please try Again!!!");
+    })
+  }
+
+  //--------------refresh after modal closes -----------------
   useEffect(() => {
     if (modalOverlay == false) {
       setRefresh(refresh + 1)
     }
   }, [modalOverlay])
 
+  //---------------useeffect to display when load or refresh changes------------
   useEffect(() => {
-    fetch("/images")
+    fetch("http://localhost:4000/images")
       .then(res => res.json())
       .then(data => {
         setImages(data.images)
@@ -117,8 +138,11 @@ function Body({ modalOverlay, loading, setLoading }) {
       {images ?
         images.map((image_id, i) => {
           return (
-            <div key={i} >
-              <img src={`/image/${image_id}`} className="rounded-md w-full" />
+            <div className="container" key={i} >
+              <img src={`http://localhost:4000/image/${image_id}`} className="rounded-md w-full" />
+              <button onClick={(e)=>deleteImage(image_id, e)} className="btn">
+                <div style={{color:"#EB5757", fontWeight:"500", fontSize:"18px", padding:"8px"}} className="text">delete</div>
+              </button>
             </div>
           );
         })
