@@ -1,12 +1,12 @@
 FROM node:17-alpine
 
-ENV NODE_ENV=production
-
 WORKDIR /app
 
-COPY . .
+COPY package*.json ./
 
-RUN npm install --production --silent
+RUN npm install
+
+COPY . .
 
 EXPOSE 4000
 
