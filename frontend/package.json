@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode production",
+    "build": "vite build",
     "serve": "vite preview",
-    "start": "serve -p 3000 dist"
+    "start": "serve dist"
   },
   "dependencies": {
     "react": "^17.0.0",
