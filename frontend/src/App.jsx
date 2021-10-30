@@ -2,12 +2,9 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 
-const HOST = window.location.hostname
-const BACKEND_PORT = import.meta.env.BACKEND_PORT
+const BACKEND_HOST = `http://${window.location.hostname}:4000`
 
-const BACKEND_HOST = `http://${HOST}:${BACKEND_PORT}`
-
-console.log({BACKEND_HOST})
+console.info('Backend Host:', BACKEND_HOST)
 
 function App() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -128,7 +125,7 @@ function Body({ modalOverlay, loading, setLoading }) {
 
   //---------------useeffect to display when load or refresh changes------------
   useEffect(() => {
-    fetch("/images")
+    fetch(`${BACKEND_HOST}/images`)
       .then(res => res.json())
       .then(data => {
         setImages(data.images)

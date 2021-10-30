@@ -16,4 +16,3 @@ services:
     #   NODE_ENV: production
     ports:
       - 8080:5000
-      # - 4000:4000
