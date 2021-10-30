@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  backend:
+    image: picsup/backend
+    build: ./backend
+    # environment:
+    #   NODE_ENV: production
+    ports:
+      - 4000:4000
+
+  frontend:
+    image: picsup/frontend
+    build: ./frontend
+    # environment:
+    #   NODE_ENV: production
+    ports:
+      - 8080:5000
+      # - 4000:4000
