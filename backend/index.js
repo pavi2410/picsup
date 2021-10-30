@@ -18,10 +18,6 @@ const port = process.env.PORT || 4000
 app.use(logger('dev'))
 app.use(cors())
 
-if (process.env.NODE_ENV == "production") {
-  app.use(express.static("client/dist"))
-}
-
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const tmpdir = path.join(os.tmpdir(), 'picsup')
