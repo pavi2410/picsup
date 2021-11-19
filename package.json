@@ -5,8 +5,8 @@
     "frontend": "cd frontend && npm run dev",
     "dev": "concurrently -n 'B,F' -c 'green,blue'  \"npm run backend\" \"npm run frontend\"",
     "build": "cd fromntend && npm run build",
-    "install-fromntend": "cd fromntend && npm install",
-    "heroku-postbuild": "npm run install-fromntend && npm run build"
+    "install-frontend": "cd frontend && npm install",
+    "heroku-postbuild": "npm run install-frontend && npm run build"
   },
   "devDependencies": {
     "concurrently": "^6.4.0"
