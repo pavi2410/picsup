@@ -7,19 +7,23 @@ const multer = require('multer');
 const cors = require('cors')
 const logger = require('morgan')
 
+// TODO: https://www.digitalocean.com/community/tutorials/test-a-node-restful-api-with-mocha-and-chai
+
 // ------- Setup -------
 
-mongoose.connect('mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retryWrites=true&w=majority').
-  then(() => { console.log("DB connected") }, (err) => { console.log(err) });
+mongoose.connect(process.env.MONGO_HOST)
+  .then(() => console.info('DB', 'connected'))
+  .catch((err) => console.error('DB', err));
 
 const app = express()
-const port = process.env.PORT || 4000
 
 app.use(logger('dev'))
 app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 if (process.env.NODE_ENV == "production") {
-  app.use(express.static("client/dist"))
+  app.use(express.static("../frontend/dist"))
 }
 
 var storage = multer.diskStorage({
@@ -49,46 +53,51 @@ var imageSchema = new mongoose.Schema({
 })
 const Images = new mongoose.model('Image', imageSchema);
 
-// var UserSchema = new mongoose.Schema({
-//   email: String,
-//   password: String,
-//   username: String
-// })
-// const User = new mongoose.model('user', UserSchema);
+const UserSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+  username: String
+})
+const User = new mongoose.model('user', UserSchema);
 
 // ------- Request handlers -------
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World!')
-// })
-// app.post('/register',(req,res)=>{
-//   console.log(req.body);
-//   let user = User.findOne({email: req.body.email});
-//   if(!user) return res.status(400).send("User already exists");
-//   const makeuser = new User ({
-//     email: req.body.email,
-//     password: req.body.password,
-//     username: req.body.username
-//   })
-//   User.save(makeuser, (err, resp) => {
-//     if (err) {
-//       res.status(500).send('Failed to create User')
-//       return
-//     }
-//     res.send("User Registration Successful");
-//   })
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
-// })
+app.post('/signup', (req, res) => {
+  console.log(req.body);
+  let user = User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send("User already exists");
+  const makeuser = new User({
+    email: req.body.email,
+    password: req.body.password,
+    username: req.body.username
+  })
+  User.save(makeuser, (err, resp) => {
+    if (err) {
+      res.status(500).send('Failed to create User')
+      return
+    }
+    res.send("User Registration Successful");
+  })
+})
 
-// app.get('/login', (req,res)=>{
-//   User.findOne({email: req.body.email, password: req.body.password})
-//   .then(res=>{
-//     res.status(200).send("Login Successful");
-//   })
-//   .catch(err=>{
-//     res.send("Some error occured while logging in. Please try again");
-//   })
-// })
+app.post('/login', (req, res) => {
+  User.findOne({ email: req.body.email, password: req.body.password })
+    .then(user => {
+      res.status(200).send("Login Successful");
+    })
+    .catch(err => {
+      res.send("Some error occured while logging in. Please try again");
+    })
+
+})
+
+app.get('/', (req, res) => {
+  res.send('Hello')
+})
 
 app.get('/images', (req, res) => {
   Images.find({})
@@ -105,7 +114,7 @@ app.get('/images', (req, res) => {
 app.get('/image/:id', (req, res) => {
   // console.log({params: req.params})
   Images.findById(req.params.id).then((image, err) => {
-    if (err || image==null) {
+    if (err || image == null) {
       res.sendStatus(404);
       return;
     }
@@ -142,7 +151,7 @@ app.post('/upload', upload.single('uploaded_file'), function (req, res) {
 app.delete('/image/:id', (req, res) => {
   // console.log(req.params.id)
   Images.findByIdAndRemove(req.params.id).then((image, err) => {
-    if (err || image==null) {
+    if (err || image == null) {
       res.sendStatus(404);
       return;
     }
@@ -150,6 +159,9 @@ app.delete('/image/:id', (req, res) => {
   })
 })
 
+const port = process.env.PORT
 app.listen(port, () => {
   console.log(`picsup server listening at http://localhost:${port}`)
 })
+
+module.exports = app;
