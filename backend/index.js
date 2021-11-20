@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors')
 const logger = require('morgan')
+const errorhandler = require('errorhandler')
 require('./userModel')
 const jsonwebtoken = require("jsonwebtoken");
 const userController = require('./userController.js');
