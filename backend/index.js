@@ -8,8 +8,6 @@ require('./userModel')
 const jsonwebtoken = require("jsonwebtoken");
 const userController = require('./userController.js');
 
-// TODO: https://www.digitalocean.com/community/tutorials/test-a-node-restful-api-with-mocha-and-chai
-
 // ------- Setup -------
 
 const MONGO_URL = process.env.MONGO_HOST || 'mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retryWrites=true&w=majority'
