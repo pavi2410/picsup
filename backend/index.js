@@ -1,12 +1,9 @@
-const os = require('os');
-const path = require('path');
 const fs = require('fs/promises');
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors')
 const logger = require('morgan')
-const bcrypt = require('bcrypt')
 require('./userModel')
 const jsonwebtoken = require("jsonwebtoken");
 const userController = require('./userController.js');
@@ -15,25 +12,24 @@ const userController = require('./userController.js');
 
 // ------- Setup -------
 
-const options = {
-  socketTimeoutMS: 30000,
-  keepAlive: true
-};
-
 const MONGO_URL = process.env.MONGO_HOST || 'mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retryWrites=true&w=majority'
-mongoose.connect(MONGO_URL, options)
+mongoose.connect(MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
   .then(() => console.info('DB', 'connected'))
   .catch((err) => console.error('DB', err));
 
 const app = express()
+const upload = multer()
 
 app.use(logger('dev'))
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-    jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIs', function(err, decode) {
+    jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIs', function (err, decode) {
       if (err) req.user = undefined;
       req.user = decode;
       next();
@@ -57,27 +53,11 @@ if (process.env.NODE_ENV == "production") {
   app.use(express.static("../frontend/dist"))
 }
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const tmpdir = path.join(os.tmpdir(), 'picsup')
-    fs.mkdir(tmpdir, { recursive: true })
-      .then(() => {
-        cb(null, tmpdir)
-      })
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
-
-var upload = multer({ storage: storage })
-
 // ------- Models -------
 
-var imageSchema = new mongoose.Schema({
+const imageSchema = new mongoose.Schema({
   name: String,
-  img:
-  {
+  img: {
     data: Buffer,
     contentType: String
   }
@@ -89,35 +69,6 @@ const Images = new mongoose.model('Image', imageSchema);
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-
-// app.post('/signup', (req, res) => {
-//   console.log(req.body);
-//   let user = User.findOne({ email: req.body.email });
-//   if (!user) return res.status(400).send("User already exists");
-//   const makeuser = new User({
-//     email: req.body.email,
-//     password: req.body.password,
-//     username: req.body.username
-//   })
-//   makeuser.save((err, resp) => {
-//     if (err) {
-//       res.status(500).send('Failed to create User')
-//       return
-//     }
-//     res.send("User Registration Successful");
-//   })
-// })
-
-// app.post('/login', (req, res) => {
-//   User.findOne({ email: req.body.email, password: req.body.password })
-//     .then(user => {
-//       res.status(200).send("Login Successful");
-//     })
-//     .catch(err => {
-//       res.send("Some error occured while logging in. Please try again");
-//     })
-
-// })
 
 app.get('/', (req, res) => {
   res.send('Hello')
@@ -151,25 +102,24 @@ app.post('/upload', upload.single('uploaded_file'), function (req, res) {
   const file = req.file;
   if (!file) {
     res.status(400).send("Please upload a file");
+    return
   }
 
-  fs.readFile(req.file.path).then(file => {
-    var obj = {
-      name: req.file.originalname,
-      img: {
-        data: file,
-        contentType: req.file.mimetype
-      }
+  const obj = {
+    name: file.originalname,
+    img: {
+      data: file.buffer,
+      contentType: file.mimetype
     }
-    const newimage = new Images(obj);
-    newimage.save(obj, (err, resp) => {
-      if (err) {
-        res.status(500).send('Failed to store image')
-        return
-      }
-      res.send("id: " + resp._id)
-    });
-  })
+  }
+  const newimage = new Images(obj);
+  newimage.save((err, resp) => {
+    if (err) {
+      res.status(500).send('Failed to store image')
+      return
+    }
+    res.json({ id: resp._id })
+  });
 });
 
 app.delete('/image/:id', (req, res) => {

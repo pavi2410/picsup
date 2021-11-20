@@ -1,9 +1,13 @@
 const request = require('supertest');
 const { expect } = require('chai');
 const app = require('../index.js');
+const { before } = require('mocha');
 
 describe('Test API routes', () => {
-  it('tests the endpoint /', (done) => {
+
+  before((done) => setTimeout(done, 8000));
+
+  it('GET /', (done) => {
     request(app)
       .get('/')
       .expect(200)
@@ -14,7 +18,7 @@ describe('Test API routes', () => {
       .end(done)
   });
 
-  it('should signup the user - /signup', (done) => {
+  it('should signup the user - POST /signup', (done) => {
     request(app)
       .post('/signup')
       .send({
@@ -26,7 +30,7 @@ describe('Test API routes', () => {
       .end(done);
   })
 
-  it('should login the user - /login', (done) => {
+  it('should login the user - POST /login', (done) => {
     request(app)
       .post('/login')
       .send({
