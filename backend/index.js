@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors')
 const logger = require('morgan')
-const errorhandler = require('errorhandler')
+const compression = require('compression')
 require('./userModel')
 const jsonwebtoken = require("jsonwebtoken");
 const userController = require('./userController.js');
@@ -26,6 +26,7 @@ app.use(logger('dev'))
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(compression())
 app.use(function (req, res, next) {
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
     jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIs', function (err, decode) {
