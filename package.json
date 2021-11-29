@@ -3,8 +3,8 @@
   "scripts": {
     "backend": "cd backend && npm run start",
     "frontend": "cd frontend && npm run dev",
-    "dev": "concurrently -n 'B,F' -c 'green,blue'  \"npm run backend\" \"npm run frontend\"",
-    "build": "cd fromntend && npm run build",
+    "start": "concurrently -n 'B,F' -c 'green,blue' \"npm run backend\" \"npm run frontend\"",
+    "build": "cd frontend && npm run build",
     "install-frontend": "cd frontend && npm install",
     "heroku-postbuild": "npm run install-frontend && npm run build"
   },
