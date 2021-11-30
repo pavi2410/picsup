@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
-import {HOST} from '../App';
+import { HOST } from '../App';
 
 function HomePage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
+  const [openImageModal, setOpenImageModal] = useState(false);
+  const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true);
+  const [idx, setIdx] = useState(-1);
+
   return (
     <>
       <div className="md:mx-16">
         <Header setmodalOverlay={setmodalOverlay} />
-        <Body loading={loading} setLoading={setLoading} modalOverlay={modalOverlay} />
+        <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
       {modalOverlay && <ModalOverlay setmodalOverlay={setmodalOverlay} loading={loading} setLoading={setLoading} />}
+      {openImageModal && <ImageModalOverlay images={images} idx={idx} setIdx={setIdx} setOpenImageModal={setOpenImageModal} loading={loading} setLoading={setLoading} />}
     </>
   )
 }
 
-function Header({ setmodalOverlay, modalOverlay }) {
+function Header({ setmodalOverlay }) {
   return (
     <nav className="flex flex-row justify-between items-center p-8">
       <div className="flex flex-row items-center gap-x-4">
@@ -56,7 +61,7 @@ function ModalOverlay({ setmodalOverlay }) {
       .catch(err => console.log(err));
   }
   return (
-    <div className="fixed left-0 top-0 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
+    <div className="fixed left-0 top-0 z-10 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
       <div className="h-full w-full md:h-auto md:w-auto py-8 px-10 bg-white m-auto shadow-xl rounded-xl">
         <p className="font-bold text-2xl mb-16">Add a new photo</p>
         <div className="pb-16">
@@ -89,9 +94,8 @@ function ModalOverlay({ setmodalOverlay }) {
   )
 }
 
-function Body({ modalOverlay, loading, setLoading }) {
+function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, setImages, setIdx }) {
   const [refresh, setRefresh] = useState(0)
-  const [images, setImages] = useState([])
 
   //-----------For deleting image --------------------
   const deleteImage = (image_id, e) => {
@@ -131,15 +135,21 @@ function Body({ modalOverlay, loading, setLoading }) {
       })
   }, [refresh])
 
-  if (loading)
+  const openmodal = (i, e) => {
+    console.log(images[i]);
+    setIdx(i);
+    setOpenImageModal(true);
+  }
+
+  if (!loading)
     return <Loader />
   return (<ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
     <Masonry gutter={24}>
       {images ?
         images.map((image_id, i) => {
           return (
-            <div className="container" onClick={ <OpenImageModal images={images} key={i} />} key={i} >
-              <img src={`${HOST}/image/${image_id}`} className="rounded-md w-full" />
+            <div className="container" key={i}>
+              <img src={`${HOST}/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" />
               <button onClick={(e) => deleteImage(image_id, e)} className="btn">
                 <div style={{ color: "#EB5757", fontWeight: "500", fontSize: "18px", padding: "8px" }} className="text">delete</div>
               </button>
@@ -152,10 +162,43 @@ function Body({ modalOverlay, loading, setLoading }) {
   </ResponsiveMasonry>);
 }
 
+// https://react-icons.github.io/react-icons/
+
+function ImageModalOverlay({ images, idx, setOpenImageModal, setIdx }) {
+  return (
+    <div className="fixed left-0 top-0 z-10 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
+      <div className="h-full w-full md:w-auto md:h-auto m-auto">
+        <img src={`${HOST}/image/${images[idx]}`} className="max-h-96" />
+        <div className="flex items-center justify-end pt-6 border-t border-solid border-blueGray-200 rounded-b">
+          <button
+            className="text-white background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+            onClick={() => setOpenImageModal(false)}
+          >
+            Close
+          </button>
+          <button
+            className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow mr-1"
+            onClick={() => {if(idx>=0) setIdx(idx-1)}}
+          >
+            Prev
+          </button>
+          <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => {if(idx<images.length) setIdx(idx+1)}}>
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Loader() {
   return (
     <div className="flex justify-center items-center">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" />
+      {/* <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" /> */}
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
     </div>
   )
 }
