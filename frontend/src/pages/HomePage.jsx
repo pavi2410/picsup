@@ -11,9 +11,18 @@ function HomePage() {
   const [idx, setIdx] = useState(-1);
   const [darkMode, setDarkMode] = useState(false);
 
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+
+  }, [darkMode])
+
   return (
     <>
-      <div className="md:mx-16">
+      <div className="dark:bg-black" >
         <Header setmodalOverlay={setmodalOverlay} darkMode={darkMode} setDarkMode={setDarkMode}/>
         <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
@@ -28,7 +37,7 @@ function Header({ setmodalOverlay, setDarkMode, darkMode }) {
     <nav className="flex flex-row justify-between items-center p-8">
       <div className="flex flex-row items-center gap-x-4">
         <div>
-          <h1 className="font-bold tracking-wider text-2xl">picsup</h1>
+          <h1 className="font-bold tracking-wider text-2xl text-green-500">picsup</h1>
         </div>
         <div className="flex flex-row justify-center items-center rounded-xl border-2 hidden">
           <svg className="z-20 hidden w-4 h-4 ml-4 text-gray-500 pointer-events-none fill-current group-hover:text-gray-400 sm:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -39,9 +48,9 @@ function Header({ setmodalOverlay, setDarkMode, darkMode }) {
         </div>
       </div>
       
-      <div className="flex items-center">
-        {darkMode ? <MdOutlineDarkMode className="h-8 w-8" onClick={setDarkMode(!darkMode)} />
-                  : <MdDarkMode className="h-8 w-8" onClick={setDarkMode(!darkMode)}/> }
+      <div className="flex items-center gap-8">
+        {darkMode ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={()=>setDarkMode(!darkMode)} />
+                  : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={()=>setDarkMode(!darkMode)}/> }
         <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => setmodalOverlay(true)}>Add a photo</button>
       </div>
     </nav>
@@ -148,7 +157,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
 
   if (loading)
     return <Loader />
-  return (<ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
+  return (<ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }} className="px-16 dark:bg-black">
     <Masonry gutter={24}>
       {images ?
         images.map((image_id, i) => {
@@ -199,11 +208,11 @@ function ImageModalOverlay({ images, idx, setOpenImageModal, setIdx }) {
 function Loader() {
   return (
     <div className="flex justify-center items-center">
-      {/* <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" /> */}
-      <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" />
+      {/* <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg> */}
     </div>
   )
 }
