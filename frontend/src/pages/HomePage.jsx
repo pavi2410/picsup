@@ -141,7 +141,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
     setOpenImageModal(true);
   }
 
-  if (!loading)
+  if (loading)
     return <Loader />
   return (<ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
     <Masonry gutter={24}>
@@ -167,9 +167,9 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
 function ImageModalOverlay({ images, idx, setOpenImageModal, setIdx }) {
   return (
     <div className="fixed left-0 top-0 z-10 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
-      <div className="h-full w-full md:w-auto md:h-auto m-auto">
+      <div className="m-auto">
         <img src={`${HOST}/image/${images[idx]}`} className="max-h-96" />
-        <div className="flex items-center justify-end pt-6 border-t border-solid border-blueGray-200 rounded-b">
+        <div className="flex items-center justify-center pt-6 border-t border-solid border-blueGray-200 rounded-b">
           <button
             className="text-white background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
             onClick={() => setOpenImageModal(false)}
