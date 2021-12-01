@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { HOST } from '../App';
+import {MdDarkMode, MdOutlineDarkMode} from 'react-icons/md'
 
 function HomePage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -8,11 +9,12 @@ function HomePage() {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true);
   const [idx, setIdx] = useState(-1);
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <>
       <div className="md:mx-16">
-        <Header setmodalOverlay={setmodalOverlay} />
+        <Header setmodalOverlay={setmodalOverlay} darkMode={darkMode} setDarkMode={setDarkMode}/>
         <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
       {modalOverlay && <ModalOverlay setmodalOverlay={setmodalOverlay} loading={loading} setLoading={setLoading} />}
@@ -21,7 +23,7 @@ function HomePage() {
   )
 }
 
-function Header({ setmodalOverlay }) {
+function Header({ setmodalOverlay, setDarkMode, darkMode }) {
   return (
     <nav className="flex flex-row justify-between items-center p-8">
       <div className="flex flex-row items-center gap-x-4">
@@ -36,7 +38,10 @@ function Header({ setmodalOverlay }) {
           <input type="text" placeholder="Search by name" className="p-3 focus:ouline-none bg-clip-content" />
         </div>
       </div>
-      <div>
+      
+      <div className="flex items-center">
+        {darkMode ? <MdOutlineDarkMode className="h-8 w-8" onClick={setDarkMode(!darkMode)} />
+                  : <MdDarkMode className="h-8 w-8" onClick={setDarkMode(!darkMode)}/> }
         <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => setmodalOverlay(true)}>Add a photo</button>
       </div>
     </nav>
@@ -168,7 +173,7 @@ function ImageModalOverlay({ images, idx, setOpenImageModal, setIdx }) {
   return (
     <div className="fixed left-0 top-0 z-10 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">
       <div className="m-auto">
-        <img src={`${HOST}/image/${images[idx]}`} className="max-h-96" />
+        <img src={`${HOST}/image/${images[idx]}`} className="sm:w-screen sm:h-auto md:w-auto md:h-96" />
         <div className="flex items-center justify-center pt-6 border-t border-solid border-blueGray-200 rounded-b">
           <button
             className="text-white background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
@@ -178,11 +183,11 @@ function ImageModalOverlay({ images, idx, setOpenImageModal, setIdx }) {
           </button>
           <button
             className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow mr-1"
-            onClick={() => {if(idx>=0) setIdx(idx-1)}}
+            onClick={() => { if (idx > 0) setIdx(idx - 1) }}
           >
             Prev
           </button>
-          <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => {if(idx<images.length) setIdx(idx+1)}}>
+          <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => { if (idx < images.length-1) setIdx(idx + 1) }}>
             Next
           </button>
         </div>
@@ -195,10 +200,10 @@ function Loader() {
   return (
     <div className="flex justify-center items-center">
       {/* <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" /> */}
-        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
+      <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
     </div>
   )
 }
