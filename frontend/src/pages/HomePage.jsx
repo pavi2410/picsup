@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { HOST } from '../App';
-import {MdDarkMode, MdOutlineDarkMode} from 'react-icons/md'
+import {MdDarkMode, MdOutlineDarkMode} from 'react-icons/md';
 
 function HomePage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -19,6 +19,7 @@ function HomePage() {
     }
 
   }, [darkMode])
+
 
   return (
     <>

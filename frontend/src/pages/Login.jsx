@@ -1,45 +1,30 @@
 import { useState } from "react";
 import { HOST } from "../App";
+import { useNavigate } from "react-router";
 
 export default function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
+  let navigate = useNavigate();
   function login() {
     // perform login
     console.log("Login", email, password);
-    // fetch(`${HOST}/login`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Accept': 'application/json',
-    //       'Content-type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       "email": email,
-    //       "password": password
-    //     })
-    //   }).then(response => response.json())
-    //   .then((responseJson) => console.log(responseJson))
-    // .catch(error => console.log(error));
-    // var myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/json");
-
-    // var raw = JSON.stringify({
-    //   "email": email,
-    //   "password": password,
-    // });
-
-    // var requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: raw,
-    //   mode: 'no-cors',
-    // };
-
-    // fetch(`${HOST}/login`, requestOptions)
-    //   .then((response) => response.text())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.log("error", error));
+    fetch(`${HOST}/login?${(+new Date())}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "email": email,
+          "password": password
+        })
+      }).then(res => res.json())
+      .then((res) => {
+        window.localStorage.setItem('user', res.token);
+        setToken(res.token);
+      })
+    .catch(error => console.log(error));
   }
 
   return (
@@ -66,7 +51,7 @@ export default function Login({ setToken }) {
           />
           <button
             className="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold text-lg"
-            onClick={login}
+            onClick={()=>login()}
           >
             Login
           </button>
@@ -74,7 +59,7 @@ export default function Login({ setToken }) {
           <hr />
           <button
             className="w-full bg-green-400 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg"
-            onClick={() => redirect()}
+            onClick={() => navigate("/signup")}
           >
             Create New Account
           </button>

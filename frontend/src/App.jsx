@@ -14,17 +14,16 @@ function App() {
   // let navigate = useNavigate();
   const [token, setToken] = useState(window.localStorage.getItem('user'));
 
-  // if (!token) {
-  //   return <Login setToken={setToken} />
-  // }
+  if (token) {
+    return <HomePage />
+  }
 
   return (
     <UserContext.Provider value={token}>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/login" element={<Login redirect={() => navigate('/')}/>} /> */}
+          <Route path="/login" index element={<Login setToken={setToken} />}/>
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/" element={<HomePage />} />
           <Route
             path="*"
             element={
