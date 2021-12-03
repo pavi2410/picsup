@@ -21,6 +21,7 @@ export default function Login({ setToken }) {
         })
       }).then(res => res.json())
       .then((res) => {
+        window.localStorage.setItem('username', res.username);
         window.localStorage.setItem('user', res.token);
         setToken(res.token);
       })
@@ -36,14 +37,14 @@ export default function Login({ setToken }) {
       <div className="container mx-auto flex flex-col items-center">
         <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
           <input
-            type="text"
+            type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500"
           />
           <input
-            type="text"
+            type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

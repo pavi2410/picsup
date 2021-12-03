@@ -37,8 +37,8 @@ export default function Signup() {
       <div className="container mx-auto flex flex-col items-center">
         <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
-          <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
-          <input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
           <hr />
           <button type="submit" className="w-full bg-green-500 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg" onClick={() => signup()}>Create New Account</button>
           <button

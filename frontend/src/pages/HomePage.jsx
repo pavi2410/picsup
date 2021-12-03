@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { HOST } from '../App';
-import {MdDarkMode, MdOutlineDarkMode} from 'react-icons/md';
+import {MdDarkMode, MdLogout, MdOutlineDarkMode} from 'react-icons/md';
 
 function HomePage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -34,6 +34,10 @@ function HomePage() {
 }
 
 function Header({ setmodalOverlay, setDarkMode, darkMode }) {
+  const logout=(e)=>{
+    window.localStorage.clear();
+    window.location.reload();
+  }
   return (
     <nav className="flex flex-row justify-between items-center p-8">
       <div className="flex flex-row items-center gap-x-4">
@@ -53,6 +57,10 @@ function Header({ setmodalOverlay, setDarkMode, darkMode }) {
         {darkMode ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={()=>setDarkMode(!darkMode)} />
                   : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={()=>setDarkMode(!darkMode)}/> }
         <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => setmodalOverlay(true)}>Add a photo</button>
+        <select className="bg-transparent dark:text-white border-0 p-3 rounded-xl" onClick={(e) => e.target.value == 'logout' ? logout() : null}>
+          <option className="font-semibold shadow hidden">{window.localStorage.getItem('username')}</option>
+          <option className="bg-green-500 text-white font-semibold shadow h-8">logout</option>
+        </select>
       </div>
     </nav>
   )
