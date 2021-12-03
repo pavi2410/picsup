@@ -23,7 +23,7 @@ export default function Signup() {
     }).then(res => res.json())
       .then((res) => {
         console.log(res);
-        navigate("/login")
+        navigate("/login");
       })
       .catch(error => console.log(error));
   }
@@ -35,7 +35,7 @@ export default function Signup() {
         <p>See with friends and the world around you on picsup.</p>
       </div>
       <div className="container mx-auto flex flex-col items-center">
-        <form className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
+        <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
           <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
           <input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
@@ -47,7 +47,7 @@ export default function Signup() {
           >
             Login
           </button>
-        </form>
+        </div>
         <p className="text-center text-sm my-4">
           <span className="font-semibold text-center w-full">View Photos</span> of celebrity, friends or family
         </p>

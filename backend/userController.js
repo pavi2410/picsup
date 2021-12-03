@@ -15,7 +15,7 @@ exports.signup = function(req, res) {
       });
     } else {
       user.hash_password = undefined;
-      return res.json(user);
+      return res.json("User added");
     }
   });
 };

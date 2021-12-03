@@ -8,8 +8,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 export const HOST = "http://localhost:4000";
 
-export const UserContext = createContext(null);
-
 function App() {
   // let navigate = useNavigate();
   const [token, setToken] = useState(window.localStorage.getItem('user'));
@@ -19,7 +17,6 @@ function App() {
   }
 
   return (
-    <UserContext.Provider value={token}>
       <BrowserRouter>
         <Routes>
           <Route path="/login" index element={<Login setToken={setToken} />}/>
@@ -34,7 +31,6 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </UserContext.Provider>
   )
 }
 

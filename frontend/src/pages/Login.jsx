@@ -34,7 +34,7 @@ export default function Login({ setToken }) {
         <p>See with friends and the world around you on picsup.</p>
       </div>
       <div className="container mx-auto flex flex-col items-center">
-        <form className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
+        <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
           <input
             type="text"
             placeholder="Email"
@@ -63,7 +63,7 @@ export default function Login({ setToken }) {
           >
             Create New Account
           </button>
-        </form>
+        </div>
         <p className="text-center text-sm my-4">
           <span className="font-semibold text-center w-full">View Photos</span>
           {" "}
