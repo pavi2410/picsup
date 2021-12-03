@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage'
 
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 
-export const HOST = "http://localhost:4000/api";
+export const HOST = window.location.hostname === 'localhost' ? "http://localhost:4000/api" : '/api';
 
 function App() {
   const [token, setToken] = useState(window.localStorage.getItem('user'));
