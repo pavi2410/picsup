@@ -152,10 +152,10 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
       .then(res => res.json())
       .then(data => {
         setImages(data.images)
-      })
-      .then(() => {
         setLoading(false)
       })
+      // .then(() => {
+      // })
   }, [refresh])
 
   const openmodal = (i, e) => {

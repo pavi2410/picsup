@@ -1,4 +1,5 @@
 const fs = require('fs/promises');
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -41,17 +42,12 @@ app.use(function (req, res, next) {
 });
 
 // todoList Routes
-app.route('/tasks')
+app.route('/api/tasks')
   .post(userController.loginRequired, userController.profile);
-app.route('/signup')
+app.route('/api/signup')
   .post(userController.signup);
-app.route('/login')
+app.route('/api/login')
   .post(userController.login);
-
-
-if (process.env.NODE_ENV == "production") {
-  app.use(express.static("../frontend/dist"))
-}
 
 // ------- Models -------
 
@@ -66,11 +62,11 @@ const Images = new mongoose.model('Image', imageSchema);
 
 // ------- Request handlers -------
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello World!')
+// })
 
-app.get('/images', (req, res) => {
+app.get('/api/images', (req, res) => {
   Images.find({})
     .then((images, err) => {
       if (err) {
@@ -82,7 +78,7 @@ app.get('/images', (req, res) => {
     })
 })
 
-app.get('/image/:id', (req, res) => {
+app.get('/api/image/:id', (req, res) => {
   // console.log({params: req.params})
   Images.findById(req.params.id).then((image, err) => {
     if (err || image == null) {
@@ -94,7 +90,7 @@ app.get('/image/:id', (req, res) => {
   })
 })
 
-app.post('/upload', upload.single('uploaded_file'), function (req, res) {
+app.post('/api/upload', upload.single('uploaded_file'), function (req, res) {
   const file = req.file;
   if (!file) {
     res.status(400).send("Please upload a file");
@@ -118,7 +114,7 @@ app.post('/upload', upload.single('uploaded_file'), function (req, res) {
   });
 });
 
-app.delete('/image/:id', (req, res) => {
+app.delete('/api/image/:id', (req, res) => {
   // console.log(req.params.id)
   Images.findByIdAndRemove(req.params.id).then((image, err) => {
     if (err || image == null) {
@@ -128,6 +124,11 @@ app.delete('/image/:id', (req, res) => {
     res.send("Image Deleted");
   })
 })
+
+app.use(express.static(path.resolve(__dirname, "../frontend/dist")));
+app.get("*", function (request, response) {
+  response.sendFile(path.resolve(__dirname, "../frontend/dist", "index.html"));
+});
 
 const port = process.env.PORT||4000
 app.listen(port, () => {
