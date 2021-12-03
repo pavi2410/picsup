@@ -4,7 +4,7 @@
     "backend": "cd backend && npm install && npm run start",
     "frontend": "cd frontend && npm run dev",
     "dev": "concurrently -n 'B,F' -c 'green,blue' \"npm run backend\" \"npm run frontend\"",
-    "start": "cd backend && npm run start",
+    "start": "npm run backend",
     "build-frontend": "cd frontend && npm run build",
     "install-frontend": "cd frontend && npm install",
     "heroku-postbuild": "npm run install-frontend && npm run build-frontend"
