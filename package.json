@@ -1,7 +1,7 @@
 {
   "name": "picsup",
   "scripts": {
-    "backend": "cd backend && npm run start",
+    "backend": "cd backend && npm install && npm run start",
     "frontend": "cd frontend && npm run dev",
     "dev": "concurrently -n 'B,F' -c 'green,blue' \"npm run backend\" \"npm run frontend\"",
     "start": "cd backend && npm run start",
