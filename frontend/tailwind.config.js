@@ -1,15 +1,17 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
-  purge: [
+  content: [
     './src/**/*.html',
-    './src/**/*.vue',
     './src/**/*.jsx'
   ],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
-  },
-  variants: {
-    extend: {},
+    extend: {
+      colors: {
+        green: colors.emerald,
+      }
+    },
   },
   plugins: [],
 }
