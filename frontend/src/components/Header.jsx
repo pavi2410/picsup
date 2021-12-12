@@ -44,7 +44,7 @@ export default function Header({ setmodalOverlay }) {
           <span class="absolute inset-y-0 left-0 flex items-center pl-3">
             <GoSearch className="w-4 h-4 text-gray-500 pointer-events-none fill-current" />
           </span>
-          <input type="text" placeholder="Search by name" className="py-3 pr-3 pl-9 bg-clip-content rounded-xl border-2" />
+          <input type="text" placeholder="Search by name" className="py-3 pr-3 pl-9 bg-clip-content rounded-xl border-2 bg-transparent dark:text-white" />
         </label>
       </div>
       <div className="flex items-center gap-8">
