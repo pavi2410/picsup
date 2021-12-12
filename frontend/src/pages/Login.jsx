@@ -1,31 +1,34 @@
 import { useState } from "react";
 import { HOST } from "../App";
 import { useNavigate } from "react-router";
+import { useAuth } from "../auth";
 
-export default function Login({ setToken }) {
+export default function Login() {
+  const auth = useAuth();
+  let navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
-  let navigate = useNavigate();
+
   function login() {
     // perform login
     console.log("Login", email, password);
     fetch(`${HOST}/login?${(+new Date())}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "email": email,
-          "password": password
-        })
-      }).then(res => res.json())
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "email": email,
+        "password": password
+      })
+    }).then(res => res.json())
       .then((res) => {
         window.localStorage.setItem('username', res.username);
-        window.localStorage.setItem('user', res.token);
-        setToken(res.token);
+        auth.setUser(res.token);
+        navigate("/");
       })
-    .catch(error => console.log(error));
+      .catch(error => console.log(error));
   }
 
   return (
@@ -52,7 +55,7 @@ export default function Login({ setToken }) {
           />
           <button
             className="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold text-lg"
-            onClick={()=>login()}
+            onClick={() => login()}
           >
             Login
           </button>

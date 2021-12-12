@@ -5,32 +5,25 @@ import SignUp from './pages/SignUp'
 import HomePage from './pages/HomePage'
 import OwnerPage from './pages/OwnerPage'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider, RequireAuth } from './auth'
 
 export const HOST = window.location.hostname === 'localhost' ? "http://localhost:4000/api" : '/api';
 
 function App() {
-  const [token, setToken] = useState(window.localStorage.getItem('user'));
-
-  if (token) {
-    return (
+  return (
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" index element={<HomePage />} />
-          <Route path="/me/images" element={<OwnerPage />} />
+          <Route path="/login" index element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/" index element={<HomePage />} />
+            <Route path="/me/images" element={<OwnerPage />} />
+          </Route>
           <Route path="*" element={<NoRoute />} />
         </Routes>
       </BrowserRouter>
-    )
-  }
-
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" index element={<Login setToken={setToken} />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="*" element={<NoRoute />} />
-      </Routes>
-    </BrowserRouter>
+    </AuthProvider>
   )
 }
 

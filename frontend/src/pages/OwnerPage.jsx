@@ -5,6 +5,7 @@ import ModalOverlay from '../components/ModalOverlay';
 import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
+import { useAuth } from '../auth';
 
 function OwnerPage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -26,6 +27,8 @@ function OwnerPage() {
 }
 
 function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, setImages, setIdx }) {
+  const auth = useAuth()
+
   const [refresh, setRefresh] = useState(0)
 
   //-----------For deleting image --------------------
@@ -58,7 +61,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
   useEffect(() => {
     fetch(`${HOST}/me/images`, {
       headers: {
-        'Authorization': `JWT ${localStorage.getItem('user')}`
+        'Authorization': `JWT ${auth.user}`
       }
     })
       .then(res => res.json())
