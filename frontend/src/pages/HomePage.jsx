@@ -5,7 +5,7 @@ import ModalOverlay from '../components/ModalOverlay';
 import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
-
+import { FaTrashAlt } from 'react-icons/fa';
 
 function HomePage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -94,8 +94,8 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
             return (
               <div className="container" key={i}>
                 <img src={`${HOST}/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" loading="lazy" />
-                <button onClick={(e) => deleteImage(image_id, e)} className="btn">
-                  <div style={{ color: "#EB5757", fontWeight: "500", fontSize: "18px", padding: "8px" }} className="text">delete</div>
+                <button onClick={(e) => deleteImage(image_id, e)} className="btn rounded-full border-2 border-red-500 text-red-500 m-2 p-2">
+                  <FaTrashAlt />
                 </button>
               </div>
             );

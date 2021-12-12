@@ -16,11 +16,9 @@ body{
 .btn{
     position: absolute;
     opacity: 0;
-    left: 82%;
-    top: 3%;
-    border: 1px solid #EB5757;
+    right: 0;
+    top: 0;
     box-sizing: border-box;
-    border-radius: 38px;
 }
 .container:hover .btn{
     opacity: 1;
