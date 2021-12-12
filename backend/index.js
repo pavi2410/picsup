@@ -1,4 +1,3 @@
-const fs = require('fs/promises');
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -7,9 +6,9 @@ const cors = require('cors')
 const logger = require('morgan')
 const compression = require('compression')
 require('./userModel')
+const {Images} = require('./imageModel')
 const jsonwebtoken = require("jsonwebtoken");
 const userController = require('./userController.js');
-
 // ------- Setup -------
 
 const MONGO_URL = process.env.MONGO_HOST || 'mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retryWrites=true&w=majority'
@@ -46,19 +45,8 @@ app.route('/api/tasks')
   .post(userController.loginRequired, userController.profile);
 app.route('/api/signup')
   .post(userController.signup);
-app.route('/api/login')
+app.route('/api/login') 
   .post(userController.login);
-
-// ------- Models -------
-
-const imageSchema = new mongoose.Schema({
-  name: String,
-  img: {
-    data: Buffer,
-    contentType: String
-  }
-})
-const Images = new mongoose.model('Image', imageSchema);
 
 // ------- Request handlers -------
 
@@ -66,8 +54,44 @@ const Images = new mongoose.model('Image', imageSchema);
 //   res.send('Hello World!')
 // })
 
+app.get('/api/ownerimages', (req, res) => {
+  Images.find({ownerid: req.user._id})
+    .then((images, err) => {
+      if (err) {
+        console.log('/images:', err)
+        res.sendStatus(404)
+        return
+      };
+      res.json({ images: images.map(image => image._id) })
+    })
+})
+
+app.get('/api/ownerimage/:id', (req, res) => {
+  // console.log({params: req.params})
+  Images.findById(req.params.id).then((image, err) => {
+    if (err || image == null) {
+      res.sendStatus(404);
+      return;
+    }
+    res.set('Content-Type', image.img.contentType)
+    res.send(image.img.data)
+  })
+})
+
 app.get('/api/images', (req, res) => {
   Images.find({})
+    .then((images, err) => {
+      if (err) {
+        console.log('/images:', err)
+        res.sendStatus(404)
+        return
+      };
+      res.json({ images: images.map(image => image._id) })
+    })
+})
+
+app.get('/api/me/images', (req, res) => {
+  Images.find({ownerid: req.user._id})
     .then((images, err) => {
       if (err) {
         console.log('/images:', err)
@@ -97,12 +121,15 @@ app.post('/api/upload', upload.single('uploaded_file'), function (req, res) {
     return
   }
 
+  console.log({ owner: req.user})
+
   const obj = {
     name: file.originalname,
     img: {
       data: file.buffer,
       contentType: file.mimetype
-    }
+    },
+    ownerid: req.user._id
   }
   const newimage = new Images(obj);
   newimage.save((err, resp) => {
@@ -116,7 +143,7 @@ app.post('/api/upload', upload.single('uploaded_file'), function (req, res) {
 
 app.delete('/api/image/:id', (req, res) => {
   // console.log(req.params.id)
-  Images.findByIdAndRemove(req.params.id).then((image, err) => {
+  Images.findOneAndRemove({_id: req.params.id, ownerid: req.user._id}).then((image, err) => {
     if (err || image == null) {
       res.sendStatus(404);
       return;

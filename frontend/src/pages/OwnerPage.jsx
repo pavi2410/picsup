@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Loader from '../components/Loader';
 
 
-function HomePage() {
+function OwnerPage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const [images, setImages] = useState([])
@@ -60,7 +60,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
 
   //---------------useeffect to display when load or refresh changes------------
   useEffect(() => {
-    fetch(`${HOST}/images`, {
+    fetch(`${HOST}/me/images`, {
       headers: {
         'Authorization': `JWT ${localStorage.getItem('user')}`
       }
@@ -109,4 +109,4 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
 
 
 
-export default HomePage
+export default OwnerPage
