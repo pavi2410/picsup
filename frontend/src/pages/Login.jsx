@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { HOST } from "../App";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useAuth } from "../auth";
 
 export default function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
+  let location = useLocation();
+
+  let from = location.state?.from?.pathname || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +29,7 @@ export default function Login() {
       .then((res) => {
         window.localStorage.setItem('username', res.username);
         auth.setUser(res.token);
-        navigate("/");
+        navigate(from, { replace: true });
       })
       .catch(error => console.log(error));
   }
