@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md';
+import { GoSearch } from 'react-icons/go';
 import { useNavigate } from 'react-router';
 
 export default function Header({ setmodalOverlay }) {
@@ -15,7 +16,7 @@ export default function Header({ setmodalOverlay }) {
     window.localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode])
 
-  const logout = (e) => {
+  function logout() {
     window.localStorage.clear();
     window.location.reload();
   }
@@ -39,17 +40,18 @@ export default function Header({ setmodalOverlay }) {
         <div>
           <h1 className="font-bold tracking-wider text-2xl text-green-500">picsup</h1>
         </div>
-        {/* <div className="flex flex-row justify-center items-center rounded-xl border-2 !hidden">
-          <svg className="z-20 hidden w-4 h-4 ml-4 text-gray-500 pointer-events-none fill-current group-hover:text-gray-400 sm:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-            <path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z">
-            </path>
-          </svg>
-          <input type="text" placeholder="Search by name" className="p-3 focus:ouline-none bg-clip-content" />
-        </div> */}
+        <label className="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <GoSearch className="w-4 h-4 text-gray-500 pointer-events-none fill-current" />
+          </span>
+          <input type="text" placeholder="Search by name" className="py-3 pr-3 pl-9 bg-clip-content rounded-xl border-2" />
+        </label>
       </div>
       <div className="flex items-center gap-8">
-        {darkMode ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
-          : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />}
+        {darkMode
+          ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
+          : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
+        }
         <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => setmodalOverlay(true)}>Add a photo</button>
         <select className="bg-transparent dark:text-white border-0 p-3 rounded-xl" onChange={e => handleOptionSelect(e.target.value)}>
           <option className="font-semibold shadow hidden">{window.localStorage.getItem('username')}</option>
