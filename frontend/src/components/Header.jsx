@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 export default function Header({ setmodalOverlay }) {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(window.localStorage.getItem('darkMode') === 'true');
 
   useEffect(() => {
     if (darkMode) {
@@ -12,6 +12,7 @@ export default function Header({ setmodalOverlay }) {
     } else {
       document.documentElement.classList.remove('dark')
     }
+    window.localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode])
 
   const logout = (e) => {
@@ -33,7 +34,7 @@ export default function Header({ setmodalOverlay }) {
   }
 
   return (
-    <nav className="flex flex-row justify-between items-center p-8">
+    <nav className="flex flex-row justify-between items-center py-8 px-16">
       <div className="flex flex-row items-center gap-x-4">
         <div>
           <h1 className="font-bold tracking-wider text-2xl text-green-500">picsup</h1>

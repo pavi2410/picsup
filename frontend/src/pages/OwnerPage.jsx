@@ -6,7 +6,6 @@ import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 
-
 function OwnerPage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
@@ -14,10 +13,9 @@ function OwnerPage() {
   const [loading, setLoading] = useState(true);
   const [idx, setIdx] = useState(-1);
 
-
   return (
     <>
-      <div className="dark:bg-black" >
+      <div className="dark:bg-black h-screen" >
         <Header setmodalOverlay={setmodalOverlay} />
         <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
@@ -26,8 +24,6 @@ function OwnerPage() {
     </>
   )
 }
-
-
 
 function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, setImages, setIdx }) {
   const [refresh, setRefresh] = useState(0)
@@ -70,8 +66,6 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
         setImages(data.images)
         setLoading(false)
       })
-    // .then(() => {
-    // })
   }, [refresh])
 
   const openmodal = (i, e) => {
@@ -88,7 +82,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
 
   return (
     <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }} className="px-16 dark:bg-black">
-      <Masonry gutter={24}>
+      <Masonry gutter="24px">
         {images ?
           images.map((image_id, i) => {
             return (
@@ -106,7 +100,5 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
     </ResponsiveMasonry>
   );
 }
-
-
 
 export default OwnerPage
