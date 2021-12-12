@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router';
 
 export default function Header({ setmodalOverlay }) {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(window.localStorage.getItem('darkMode') === 'true');
+  const [darkMode, setDarkMode] = useState(() => {
+    return window.localStorage.getItem('darkMode') === 'true'
+  });
 
   useEffect(() => {
     if (darkMode) {
@@ -41,7 +43,7 @@ export default function Header({ setmodalOverlay }) {
           <h1 className="font-bold tracking-wider text-2xl text-green-500">picsup</h1>
         </div>
         <label className="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             <GoSearch className="w-4 h-4 text-gray-500 pointer-events-none fill-current" />
           </span>
           <input type="text" placeholder="Search by name" className="py-3 pr-3 pl-9 bg-clip-content rounded-xl border-2 bg-transparent dark:text-white" />
