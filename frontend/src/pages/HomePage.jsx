@@ -93,7 +93,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
           images.map((image_id, i) => {
             return (
               <div className="container" key={i}>
-                <img src={`${HOST}/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" />
+                <img src={`${HOST}/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" loading="lazy" />
                 <button onClick={(e) => deleteImage(image_id, e)} className="btn">
                   <div style={{ color: "#EB5757", fontWeight: "500", fontSize: "18px", padding: "8px" }} className="text">delete</div>
                 </button>
