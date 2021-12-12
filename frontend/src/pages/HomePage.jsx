@@ -17,7 +17,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="dark:bg-black" >
+      <div className="dark:bg-black h-screen" >
         <Header setmodalOverlay={setmodalOverlay} />
         <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
