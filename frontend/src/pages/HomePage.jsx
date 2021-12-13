@@ -6,6 +6,8 @@ import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 import { FaTrashAlt } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { useAuth } from '../auth';
 
 function HomePage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -27,6 +29,8 @@ function HomePage() {
 }
 
 function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, setImages, setIdx }) {
+  const auth = useAuth()
+
   const [refresh, setRefresh] = useState(0)
 
   //-----------For deleting image --------------------
@@ -35,16 +39,24 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
     const deleteMethod = {
       method: 'DELETE',
       headers: {
-        'Content-type': 'application/json; charset=UTF-8'
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization': `JWT ${auth.user}`
       }
     }
     fetch(`${HOST}/image/${image_id}`, deleteMethod)
       .then(res => {
+
+        if (!res.ok) {
+          toast("You cannot delete this image!!", { type: "error" });
+          return
+        }
+        toast("Image Sucessfully Deleted!!", { type: "success" });
         console.log("Image Sucessfully Deleted");
         setRefresh(refresh + 1);
       })
       .catch(err => {
         console.log(err + "Error occured! Please try Again!!!");
+        toast("Something went wrong! throw your pc")
       })
   }
 

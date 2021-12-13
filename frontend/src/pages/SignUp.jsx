@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { HOST } from "../App";
+import { toast } from 'react-toastify';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -23,9 +24,13 @@ export default function Signup() {
     }).then(res => res.json())
       .then((res) => {
         console.log(res);
+        toast("U have entered Nirvana :')", { type: "success" });
         navigate("/login");
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log(error);
+        toast("Some error occured! Try harder ;)", { type: "error" });
+      });
   }
 
   return (
@@ -39,7 +44,6 @@ export default function Signup() {
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
-          <hr />
           <button type="submit" className="w-full bg-green-500 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg" onClick={() => signup()}>Create New Account</button>
           <button
             className="w-full bg-blue-500 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg"

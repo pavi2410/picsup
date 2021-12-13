@@ -2,6 +2,7 @@ import { useState } from "react";
 import { HOST } from "../App";
 import { useNavigate, useLocation } from "react-router";
 import { useAuth } from "../auth";
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const auth = useAuth();
@@ -27,11 +28,19 @@ export default function Login() {
       })
     }).then(res => res.json())
       .then((res) => {
+        // if (!res.ok) {
+        //   toast('try again')
+        //   return
+        // }
+        toast("Welcome to picsup!! U have entered Nirvana ;)", { type: "success" });
         window.localStorage.setItem('username', res.username);
         auth.setUser(res.token);
         navigate(from, { replace: true });
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log(error);
+        toast("Some error occured! Think harder ;)", { type: "error" });
+      });
   }
 
   return (
@@ -63,7 +72,6 @@ export default function Login() {
             Login
           </button>
           <a className="text-blue-400 text-center my-2">Forgot Pasword?</a>
-          <hr />
           <button
             className="w-full bg-green-400 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg"
             onClick={() => navigate("/signup")}

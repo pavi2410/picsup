@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { HOST } from '../App';
+import { useAuth } from '../auth';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ModalOverlay({ setmodalOverlay }) {
+  const auth = useAuth();
   const [file, setFile] = useState(null);
 
   const uploadFile = () => {
@@ -13,16 +17,20 @@ export default function ModalOverlay({ setmodalOverlay }) {
     fetch(`${HOST}/upload`, {
       method: 'POST',
       headers: {
-        'Authorization': `JWT ${localStorage.getItem('user')}`
+        'Authorization': `JWT ${auth.user}`
       },
       body: formData
     })
       .then(res => {
         console.log("File Uploaded Sucessfully");
+        toast("File Uploaded Sucessfully!!", { type: "success" });
         setFile(null);
         setmodalOverlay(false);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        toast("Some error occured! Try harder ;)", { type: "error" });
+      });
   }
   return (
     <div className="fixed left-0 top-0 z-10 overflow-y-hidden w-full h-full flex justify-center align-center bg-green-200 backdrop-filter backdrop-blur-3xl bg-opacity-50">

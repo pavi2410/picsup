@@ -7,7 +7,7 @@ export default function ImageModalOverlay({ images, idx, setOpenImageModal, setI
           <img src={`${HOST}/image/${images[idx]}`} className="sm:w-screen sm:h-auto md:w-auto md:h-96" />
           <div className="flex items-center justify-center pt-6 border-t border-solid border-blueGray-200 rounded-b">
             <button
-              className="text-white background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+              className="text-black background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
               onClick={() => setOpenImageModal(false)}
             >
               Close

@@ -6,6 +6,8 @@ import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 import { useAuth } from '../auth';
+import { FaTrashAlt } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 function OwnerPage() {
   const [modalOverlay, setmodalOverlay] = useState(false);
@@ -37,16 +39,24 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
     const deleteMethod = {
       method: 'DELETE',
       headers: {
-        'Content-type': 'application/json; charset=UTF-8'
+        'Content-type': 'application/json; charset=UTF-8',
+        'Authorization': `JWT ${auth.user}`
       }
     }
     fetch(`${HOST}/image/${image_id}`, deleteMethod)
       .then(res => {
+
+        if (!res.ok) {
+          toast("You cannot delete this image!!", { type: "error" });
+          return
+        }
+        toast("Image Sucessfully Deleted!!", { type: "success" });
         console.log("Image Sucessfully Deleted");
         setRefresh(refresh + 1);
       })
       .catch(err => {
         console.log(err + "Error occured! Please try Again!!!");
+        toast("Something went wrong! throw your pc")
       })
   }
 
@@ -86,18 +96,22 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
   return (
     <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }} className="px-16 dark:bg-black">
       <Masonry gutter="24px">
-        {images ?
+        {(images && images.length) ?
           images.map((image_id, i) => {
             return (
               <div className="container" key={i}>
                 <img src={`${HOST}/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" loading="lazy" />
-                <button onClick={(e) => deleteImage(image_id, e)} className="btn">
-                  <div style={{ color: "#EB5757", fontWeight: "500", fontSize: "18px", padding: "8px" }} className="text">delete</div>
+                <button onClick={(e) => deleteImage(image_id, e)} className="btn rounded-full border-2 border-red-500 text-red-500 m-2 p-2">
+                  <FaTrashAlt />
                 </button>
               </div>
             );
           })
-          : null
+          : (
+            <div className="">
+              You have no images. Upload some now!
+            </div>
+          )
         }
       </Masonry>
     </ResponsiveMasonry>

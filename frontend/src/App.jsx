@@ -6,6 +6,8 @@ import HomePage from './pages/HomePage'
 import OwnerPage from './pages/OwnerPage'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from './auth'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const HOST = window.location.hostname === 'localhost' ? "http://localhost:4000/api" : '/api';
 
@@ -23,6 +25,7 @@ function App() {
           <Route path="*" element={<NoRoute />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </AuthProvider>
   )
 }
