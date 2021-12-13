@@ -28,11 +28,11 @@ export default function Login() {
       })
     }).then(res => res.json())
       .then((res) => {
-        // if (!res.ok) {
-        //   toast('try again')
-        //   return
-        // }
-        toast("Welcome to picsup!! U have entered Nirvana ;)", { type: "success" });
+        if (res.message) {
+          toast('Some error occured! Think harder ;)');
+          return
+        }
+        toast("Welcome to picsup!!", { type: "success" });
         window.localStorage.setItem('username', res.username);
         auth.setUser(res.token);
         navigate(from, { replace: true });
