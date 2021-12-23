@@ -6,7 +6,8 @@ const imageSchema = new mongoose.Schema({
     data: Buffer,
     contentType: String
   },
-  ownerid: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  ownerid: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  tags: [String],
 })
 
 exports.Images = new mongoose.model('Image', imageSchema);

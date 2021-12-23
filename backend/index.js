@@ -123,13 +123,16 @@ app.post('/api/upload', upload.single('uploaded_file'), function (req, res) {
 
   console.log({ owner: req.user})
 
+  const tags = [...req.body.tags.split(',')]
+
   const obj = {
     name: file.originalname,
     img: {
       data: file.buffer,
       contentType: file.mimetype
     },
-    ownerid: req.user._id
+    ownerid: req.user._id,
+    tags: tags,
   }
   const newimage = new Images(obj);
   newimage.save((err, resp) => {
