@@ -1,38 +1,52 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import prisma from '../../prisma.js'
 
-export const signup = (req, res) => {
-  var newUser = new User(req.body);
-  newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
-  newUser.save(function (err, user) {
-    if (err) {
-      return res.status(400).send({
-        message: err
-      });
-    } else {
-      user.hash_password = undefined;
-      return res.json("User added");
+export const signup = async (req, res) => {
+  const { email, password, username } = req.body
+  const hash_password = bcrypt.hashSync(password, 10);
+
+  const newuser = await prisma.users.create({
+    data: {
+      email,
+      hash_password,
+      username
     }
-  });
-};
+  })
 
-export const login = (req, res) => {
-  User.findOne({
-    email: req.body.email
-  }, function (err, user) {
-    if (err) throw err;
-    if (!user || !bcrypt.compareSync(req.body.password, user.hash_password)) {
-      return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
+  res.json("User added");
+}
+
+export const login = async (req, res) => {
+  const { email, password } = req.body
+
+  const user = await prisma.users.findUnique({
+    where: {
+      email: email
     }
-    return res.json({ token: jwt.sign({ email: user.email, username: user.username, _id: user._id }, 'RESTFULAPIs',), username: user.username });
-  });
-};
+  })
 
-export const profile = (req, res, next) => {
+  if (!user || !bcrypt.compareSync(req.body.password, user.hash_password)) {
+    res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
+    return
+  }
+
+  const signedToken = jwt.sign({ email: user.email, username: user.username, id: user.id }, 'RESTFULAPIs')
+
+  res.json({ token: signedToken });
+}
+
+export const profile = async (req, res) => {
   if (req.user) {
-    res.send(req.user);
+    res.status(401).json({ message: 'Invalid token' });
+    return
   }
-  else {
-    return res.status(401).json({ message: 'Invalid token' });
-  }
+
+  const user = await prisma.users.findUnique({
+    where: {
+      id: req.user.id
+    }
+  })
+
+  res.json({ user })
 };
