@@ -1,16 +1,20 @@
 import { useState, useEffect, useMemo } from "react";
-import { HOST } from '../App';
 import { useAuth } from '../auth';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ml5 from 'ml5'
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { uploadImage } from "../api/images";
+import { useMutation } from 'react-query'
+import {Button, Input} from '@mui/material'
 
 export default function ModalOverlay({ setmodalOverlay }) {
   const auth = useAuth();
   const classifier = useMemo(() => ml5.imageClassifier('MobileNet', { topk: 1 }), [])
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState([]);
+
+  const uploadImageMutation = useMutation(uploadImage)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,22 +33,15 @@ export default function ModalOverlay({ setmodalOverlay }) {
     const formData = new FormData()
     formData.append('uploaded_file', file)
     formData.append('tags', tags)
-    fetch(`${HOST}/upload`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `JWT ${auth.user}`
-      },
-      body: formData
-    })
+
+    uploadImageMutation.mutateAsync(formData)
       .then(res => {
-        console.log("File Uploaded Sucessfully");
-        toast("File Uploaded Sucessfully!!", { type: "success" });
+        toast.success("File Uploaded Sucessfully!!");
         setFile(null);
         setmodalOverlay(false);
       })
       .catch(err => {
-        console.log(err);
-        toast("Some error occured! Try harder ;)", { type: "error" });
+        toast.error("Some error occured! Try harder ;)");
       });
   }
   return (
@@ -57,8 +54,14 @@ export default function ModalOverlay({ setmodalOverlay }) {
             {!file ? <FaCloudUploadAlt fontSize="3rem" /> : null}
             {file && <img className="max-h-64" src={URL.createObjectURL(file)} id="img_file" />}
             <span className="mt-2 text-base leading-normal">{file ? file.name : "Select a image"}</span>
-            <input type='file' className="hidden" onChange={(e) => setFile(e.target.files[0])} />
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
           </label>
+          {/* <label htmlFor="contained-button-file">
+            <Input accept="image/*" id="contained-button-file" multiple type="file" />
+            <Button variant="contained" component="span">
+              Upload
+            </Button>
+          </label> */}
           {/* <input className="border-gray-300 focus:ring-blue-600 block w-full overflow-hidden cursor-pointer border text-gray-800 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:border-transparent"
               aria-describedby="view_model_avatar_help" id="view_model_avatar" name="view_model[avatar]" }
               type="file"
@@ -70,15 +73,12 @@ export default function ModalOverlay({ setmodalOverlay }) {
           ))}
         </div>
         <div className="flex items-center justify-end pt-6 border-t border-solid border-blueGray-200 rounded-b">
-          <button
-            className="text-gray-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
-            onClick={() => setmodalOverlay(false)}
-          >
+          <Button onClick={() => setmodalOverlay(false)}>
             Close
-          </button>
-          <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={uploadFile}>
+          </Button>
+          <Button variant="contained" onClick={uploadFile}>
             Upload
-          </button>
+          </Button>
         </div>
       </div>
     </div>
