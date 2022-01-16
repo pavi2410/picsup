@@ -4,11 +4,32 @@ import { GoSearch } from 'react-icons/go';
 import { useNavigate } from 'react-router';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useAuth } from '../auth';
+import { Button, Menu, MenuItem } from '@mui/material'
 
 export default function Header({ setmodalOverlay }) {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
   const auth = useAuth()
+
+  const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (e) => {
+    setAnchorEl(null);
+
+    const option = e.currentTarget.getAttribute('label')
+
+    const options = {
+      profile: () => navigate('/profile'),
+      images: () => { navigate('/me/images') },
+      logout: () => { logout() }
+    }
+    
+    options[option]();
+  };
 
   useEffect(() => {
     if (darkMode) {
@@ -21,19 +42,6 @@ export default function Header({ setmodalOverlay }) {
   function logout() {
     window.localStorage.clear();
     window.location.reload();
-  }
-
-  function handleOptionSelect(option) {
-    switch (option) {
-      case 'images':
-        navigate('/me/images')
-        break;
-      case 'logout':
-        logout();
-        break;
-      default:
-        break;
-    }
   }
 
   return (
@@ -54,12 +62,29 @@ export default function Header({ setmodalOverlay }) {
           ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
           : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
         }
-        <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => setmodalOverlay(true)}>Add a photo</button>
-        <select className="bg-transparent dark:text-white border-0 p-3 rounded-xl" onChange={e => handleOptionSelect(e.target.value)}>
-          <option className="font-semibold shadow hidden">{auth.user.username}</option>
-          <option className="bg-green-500 text-white font-semibold shadow h-8" value="images">My images</option>
-          <option className="bg-green-500 border-black text-white font-semibold shadow h-8" value="logout">logout</option>
-        </select>
+        <Button variant="contained" onClick={() => setmodalOverlay(true)}>Add a photo</Button>
+        <Button
+          id="basic-button"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          {auth.user.username}
+        </Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+          <MenuItem onClick={handleClose} label="profile">Profile</MenuItem>
+          <MenuItem onClick={handleClose} label="images">My images</MenuItem>
+          <MenuItem onClick={handleClose} label="logout">Logout</MenuItem>
+        </Menu>
       </div>
     </nav>
   )
