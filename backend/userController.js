@@ -1,11 +1,12 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-  jwt = require('jsonwebtoken'),
-  bcrypt = require('bcrypt'),
-  User = mongoose.model('User');
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
-exports.signup = function(req, res) {
+const User = mongoose.model('User');
+
+export const signup = function(req, res) {
   var newUser = new User(req.body);
   newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
   newUser.save(function(err, user) {
@@ -20,7 +21,7 @@ exports.signup = function(req, res) {
   });
 };
 
-exports.login = function(req, res) {
+export const login = function(req, res) {
   User.findOne({
     email: req.body.email
   }, function(err, user) {
@@ -32,7 +33,7 @@ exports.login = function(req, res) {
   });
 };
 
-exports.loginRequired = function(req, res, next) {
+export const loginRequired = function(req, res, next) {
   if (req.user) {
     next();
   } else {
@@ -40,7 +41,7 @@ exports.loginRequired = function(req, res, next) {
     return res.status(401).json({ message: 'Unauthorized user!!' });
   }
 };
-exports.profile = function(req, res, next) {
+export const profile = function(req, res, next) {
   if (req.user) {
     res.send(req.user);
     next();

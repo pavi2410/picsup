@@ -1,14 +1,14 @@
-const path = require('path');
-const express = require('express');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const cors = require('cors')
-const logger = require('morgan')
-const compression = require('compression')
-require('./userModel')
-const {Images} = require('./imageModel')
-const jsonwebtoken = require("jsonwebtoken");
-const userController = require('./userController.js');
+import path from 'path'
+import express from 'express'
+import mongoose from 'mongoose'
+import multer from 'multer'
+import cors from 'cors'
+import logger from 'morgan'
+import compression from 'compression'
+import './userModel'
+import {Images} from './imageModel'
+import jsonwebtoken from "jsonwebtoken"
+import userController from './userController.js'
 // ------- Setup -------
 
 const MONGO_URL = process.env.MONGO_HOST || 'mongodb+srv://Admin:admin@picsup.ifxzn.mongodb.net/picsup?retryWrites=true&w=majority'
@@ -165,4 +165,4 @@ app.listen(port, () => {
   console.log(`picsup server listening at http://localhost:${port}`)
 })
 
-module.exports = app;
+export default app
