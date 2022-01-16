@@ -9,18 +9,17 @@ datasource db {
 }
 
 model images {
-  id      String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  v       Int      @map("__v")
-  img     Json
-  name    String
-  ownerid String   @db.ObjectId
-  tags    String[]
+  id        String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  img       Json
+  name      String
+  ownerid   String   @db.ObjectId
+  tags      String[]
 }
 
 model users {
   id            String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  v             Int      @map("__v")
-  created       DateTime @db.Date
+  createdAt     DateTime @default(now())
   email         String   @unique(map: "email_1")
   hash_password String
   username      String

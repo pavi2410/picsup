@@ -10,7 +10,9 @@ export const signup = async (req, res) => {
     data: {
       email,
       hash_password,
-      username
+      username,
+      v: 0,
+      created: new Date()
     }
   })
 
@@ -26,7 +28,7 @@ export const login = async (req, res) => {
     }
   })
 
-  if (!user || !bcrypt.compareSync(req.body.password, user.hash_password)) {
+  if (!user || !bcrypt.compareSync(password, user.hash_password)) {
     res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     return
   }
