@@ -40,10 +40,10 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        'Authorization': `JWT ${auth.user}`
+        'Authorization': `JWT ${auth.token}`
       }
     }
-    fetch(`${HOST}/image/${image_id}`, deleteMethod)
+    fetch(`${HOST}/images/image/${image_id}`, deleteMethod)
       .then(res => {
 
         if (!res.ok) {
@@ -69,9 +69,9 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
 
   //---------------useeffect to display when load or refresh changes------------
   useEffect(() => {
-    fetch(`${HOST}/images`, {
+    fetch(`${HOST}/images/images`, {
       headers: {
-        'Authorization': `JWT ${localStorage.getItem('user')}`
+        'Authorization': `JWT ${auth.token}`
       }
     })
       .then(res => res.json())
@@ -100,7 +100,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
           images.map((image_id, i) => {
             return (
               <div className="container" key={i}>
-                <img src={`${HOST}/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" loading="lazy" />
+                <img src={`${HOST}/images/image/${image_id}`} onClick={(e) => { openmodal(i, e) }} key={i} className="rounded-md w-full" loading="lazy" />
                 <button onClick={(e) => deleteImage(image_id, e)} className="btn rounded-full border-2 border-red-500 text-red-500 m-2 p-2">
                   <FaTrashAlt />
                 </button>

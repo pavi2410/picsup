@@ -40,7 +40,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        'Authorization': `JWT ${auth.user}`
+        'Authorization': `JWT ${auth.token}`
       }
     }
     fetch(`${HOST}/image/${image_id}`, deleteMethod)
@@ -71,7 +71,7 @@ function Body({ modalOverlay, loading, setLoading, setOpenImageModal, images, se
   useEffect(() => {
     fetch(`${HOST}/me/images`, {
       headers: {
-        'Authorization': `JWT ${auth.user}`
+        'Authorization': `JWT ${auth.token}`
       }
     })
       .then(res => res.json())

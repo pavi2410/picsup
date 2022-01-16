@@ -11,7 +11,7 @@ export default function Signup() {
   let navigate = useNavigate();
   function signup() {
     // perform signup
-    fetch(`${HOST}/signup`, {
+    fetch(`${HOST}/users/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

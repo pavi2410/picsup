@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
 import { useNavigate } from 'react-router';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { useAuth } from '../auth';
 
 export default function Header({ setmodalOverlay }) {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(() => {
-    return window.localStorage.getItem('darkMode') === 'true'
-  });
+  const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
+  const auth = useAuth()
 
   useEffect(() => {
     if (darkMode) {
@@ -15,7 +16,6 @@ export default function Header({ setmodalOverlay }) {
     } else {
       document.documentElement.classList.remove('dark')
     }
-    window.localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode])
 
   function logout() {
@@ -56,7 +56,7 @@ export default function Header({ setmodalOverlay }) {
         }
         <button className="bg-green-500 text-white rounded-xl p-3 font-semibold shadow" onClick={() => setmodalOverlay(true)}>Add a photo</button>
         <select className="bg-transparent dark:text-white border-0 p-3 rounded-xl" onChange={e => handleOptionSelect(e.target.value)}>
-          <option className="font-semibold shadow hidden">{window.localStorage.getItem('username')}</option>
+          <option className="font-semibold shadow hidden">{auth.user.username}</option>
           <option className="bg-green-500 text-white font-semibold shadow h-8" value="images">My images</option>
           <option className="bg-green-500 border-black text-white font-semibold shadow h-8" value="logout">logout</option>
         </select>

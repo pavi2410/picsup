@@ -17,7 +17,7 @@ export default function Login() {
   function login() {
     // perform login
     console.log("Login", email, password);
-    fetch(`${HOST}/login?${(+new Date())}`, {
+    fetch(`${HOST}/users/login?${(+new Date())}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,8 +33,7 @@ export default function Login() {
           return
         }
         toast("Welcome to picsup!!", { type: "success" });
-        window.localStorage.setItem('username', res.username);
-        auth.setUser(res.token);
+        auth.setToken(res.token);
         navigate(from, { replace: true });
       })
       .catch(error => {

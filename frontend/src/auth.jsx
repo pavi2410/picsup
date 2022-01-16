@@ -1,19 +1,20 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 let AuthContext = React.createContext(null);
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [token, setToken] = useLocalStorage("token");
+  const [user, setUser] = useState(() => getUserFromToken(token));
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
-  }, [user]);
+    if (token) {
+      setUser(getUserFromToken(token))
+    }
+  }, [token])
 
-  let value = { user, setUser };
+  let value = { token, setToken, user };
 
   return (
     <AuthContext.Provider value={value}>
@@ -30,7 +31,7 @@ function RequireAuth() {
   let auth = useAuth();
   let location = useLocation();
 
-  if (!auth.user) {
+  if (!auth.token) {
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
@@ -38,3 +39,7 @@ function RequireAuth() {
 }
 
 export { AuthProvider, useAuth, RequireAuth };
+
+function getUserFromToken(token) {
+  return JSON.parse(atob(token.split('.')[1], 'base64'));
+};
