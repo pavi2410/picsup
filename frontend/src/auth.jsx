@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import useLocalStorage from "./hooks/useLocalStorage";
+import axios from 'axios'
 
 let AuthContext = React.createContext(null);
 
@@ -13,6 +14,12 @@ function AuthProvider({ children }) {
       setUser(getUserFromToken(token))
     }
   }, [token])
+
+  axios.interceptors.request.use(function (config) {
+    config.headers['Authorization'] = 'JWT ' + token;
+
+    return config;
+  });
 
   let value = { token, setToken, user };
 

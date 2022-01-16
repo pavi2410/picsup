@@ -7,7 +7,7 @@ export function getAllImages() {
   return axios.get(IMAGES_HOST + '/images')
 }
 
-export function getImageById(imageId) {
+export function getImageById({ imageId }) {
   return axios.get(IMAGES_HOST + '/image/' + imageId)
 }
 
@@ -15,7 +15,7 @@ export function uploadImage() {
   return axios.post(IMAGES_HOST + '/upload')
 }
 
-export function deleteImageById(imageId) {
+export function deleteImageById({ imageId }) {
   return axios.delete(IMAGES_HOST + '/image/' + imageId)
 }
 
@@ -24,6 +24,6 @@ export function getAllOwnerImages() {
   return axios.get(IMAGES_HOST + '/ownerimages')
 }
 
-export function getOwnerImageById(owenerId) {
-  return axios.get(IMAGES_HOST + '/ownerimage/' + owenerId)
+export function getOwnerImageById({ ownerId }) {
+  return axios.get(IMAGES_HOST + '/ownerimage/' + ownerId)
 }

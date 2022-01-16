@@ -1,35 +1,26 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { HOST } from "../App";
 import { toast } from 'react-toastify';
+import { signupUser } from "../api/users";
 
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
 
-  let navigate = useNavigate();
+  const signupMutation = useMutation(signupUser)
+
+  const navigate = useNavigate();
+
   function signup() {
-    // perform signup
-    fetch(`${HOST}/users/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "email": email,
-        "password": password,
-        "username": username
-      })
-    }).then(res => res.json())
+    signupMutation.mutate({ email, password, username })
       .then((res) => {
         console.log(res);
-        toast("U have entered Nirvana :')", { type: "success" });
+        toast.success("U have entered Nirvana :')");
         navigate("/login");
       })
       .catch(error => {
-        console.log(error);
-        toast("Some error occured! Try harder ;)", { type: "error" });
+        toast.error("Some error occured! Try harder ;)");
       });
   }
 
