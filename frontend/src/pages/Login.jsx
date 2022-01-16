@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { HOST } from "../App";
 import { useNavigate, useLocation } from "react-router";
 import { useAuth } from "../auth";
 import { toast } from 'react-toastify';
+import { useMutation } from 'react-query'
+import { loginUser } from '../api/users'
 
 export default function Login() {
   const auth = useAuth();
@@ -14,31 +15,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const loginMutation = useMutation(loginUser)
+
   function login() {
-    // perform login
-    console.log("Login", email, password);
-    fetch(`${HOST}/users/login?${(+new Date())}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "email": email,
-        "password": password
-      })
-    }).then(res => res.json())
+    loginMutation.mutateAsync({ email, password })
       .then((res) => {
-        if (res.message) {
-          toast('Some error occured! Think harder ;)');
-          return
-        }
-        toast("Welcome to picsup!!", { type: "success" });
-        auth.setToken(res.token);
+        toast.success("Welcome to picsup!!");
+        auth.setToken(res.data.token);
         navigate(from, { replace: true });
       })
       .catch(error => {
-        console.log(error);
-        toast("Some error occured! Think harder ;)", { type: "error" });
+        toast.error("Some error occured! Try harder ;)");
       });
   }
 

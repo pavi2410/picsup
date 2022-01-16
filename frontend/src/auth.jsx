@@ -41,5 +41,6 @@ function RequireAuth() {
 export { AuthProvider, useAuth, RequireAuth };
 
 function getUserFromToken(token) {
+  if (!token) return;
   return JSON.parse(atob(token.split('.')[1], 'base64'));
 };
