@@ -32,7 +32,7 @@ function HomePage() {
 function Body({ modalOverlay, setOpenImageModal, setIdx }) {
   const queryClient = useQueryClient()
 
-  const { isLoading, res } = useQuery('images', getAllImages)
+  const { isLoading, data } = useQuery('images', getAllImages)
   const deleteImageMutation = useMutation(deleteImageById, {
     onSuccess: () => {
       queryClient.invalidateQueries('images')
@@ -55,15 +55,13 @@ function Body({ modalOverlay, setOpenImageModal, setIdx }) {
     setOpenImageModal(true);
   }
 
-  if (isLoading || !res) {
-    return (
-      <Loader />
-    )
+  if (isLoading || !data) {
+    return <Loader />
   }
 
   return (
     <Masonry columns={3} spacing={2}>
-      {res?.data?.images.map((imageId, index) => (
+      {data?.data?.images.map((imageId, index) => (
         <Stack key={index} borderRadius={48}>
           <img
             src={HOST + '/images/image/' + imageId}

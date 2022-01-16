@@ -56,19 +56,13 @@ function Body({ modalOverlay, setOpenImageModal, setIdx }) {
     setOpenImageModal(true);
   }
 
-  if (isLoading) {
-    return (
-      <Loader />
-    )
-  }
-
-  if (!data) {
-    return "no images"
+  if (isLoading || !data) {
+    return <Loader />
   }
 
   return (
     <Masonry columns={3} spacing={2}>
-      {data?.images?.map((imageId, index) => (
+      {data?.data?.images?.map((imageId, index) => (
         <Stack key={index} borderRadius={48}>
           <img
             src={HOST + '/images/image/' + imageId}
