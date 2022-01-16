@@ -17,8 +17,8 @@ export default function ModalOverlay({ setmodalOverlay }) {
       classifier
         .then(it => it.classify(document.getElementById('img_file')))
         .then(result => {
-          const predictions = [...new Set(result[0].label.replace(',', '').split(' '))]
-          console.log({ predictions })
+          const predictions = [...new Set(result[0].label.replaceAll(',', '').split(' '))]
+          console.log({ result, predictions })
           setTags(predictions);
         })
     }, 1000)
