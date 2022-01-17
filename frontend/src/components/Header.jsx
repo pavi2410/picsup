@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useAuth } from '../auth';
 import { Button, Menu, MenuItem } from '@mui/material'
-import { ImageUploadDialog } from './ImageUploadDialog';
+import ImageUploadDialog from './ImageUploadDialog';
 
-export default function Header({ setmodalOverlay }) {
+export default function Header() {
   const navigate = useNavigate();
   const auth = useAuth()
 

@@ -6,7 +6,7 @@ import { uploadImage } from "../api/images";
 import { useMutation } from 'react-query'
 import { Button, Chip, Dialog, DialogTitle, DialogActions, DialogContent, Stack } from '@mui/material'
 
-export default function ImageUploadDialog({ onClose, selectedValue, open }) {
+export default function ImageUploadDialog({ onClose, open }) {
   const imageFileRef = useRef()
   const classifier = useMemo(() => ml5.imageClassifier('MobileNet', { topk: 1 }), [])
   const [file, setFile] = useState(null);
@@ -28,7 +28,7 @@ export default function ImageUploadDialog({ onClose, selectedValue, open }) {
   }, [file])
 
   const handleClose = () => {
-    onClose(selectedValue);
+    onClose();
   };
 
   const uploadFile = () => {
