@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
 import { useNavigate } from 'react-router';
-import useLocalStorage from '../hooks/useLocalStorage';
 import { useAuth } from '../auth';
 import { Button, Menu, MenuItem } from '@mui/material'
 import ImageUploadDialog from './ImageUploadDialog';
+import DarkThemeToggle from './DarkThemeToggle';
 
 export default function Header() {
   const navigate = useNavigate();
   const auth = useAuth()
 
-  const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
   const [open2, setOpen2] = useState(false);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -32,14 +30,6 @@ export default function Header() {
     
     options[option]();
   };
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [darkMode])
 
   function logout() {
     window.localStorage.clear();
@@ -60,10 +50,7 @@ export default function Header() {
         </label> */}
       </div>
       <div className="flex items-center gap-8">
-        {darkMode
-          ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
-          : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
-        }
+        <DarkThemeToggle />
         <Button variant="contained" onClick={() => setOpen2(true)}>Add a photo</Button>
         <Button
           id="basic-button"
