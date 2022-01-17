@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { HOST } from '../App';
-import ImageModalOverlay from '../components/ImageModalOverlay';
+import ImageViewerDialog from '../components/ImageViewerDialog';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
@@ -10,25 +10,22 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { deleteImageById, getAllImages } from '../api/images';
 
 function HomePage() {
-  const [modalOverlay, setmodalOverlay] = useState(false);
-  const [openImageModal, setOpenImageModal] = useState(false);
+  const [openImageViewer, setOpenImageViewer] = useState(false);
   const [images, setImages] = useState([])
-  const [loading, setLoading] = useState(true);
   const [idx, setIdx] = useState(-1);
-  
 
   return (
     <>
-      <div className="dark:bg-black h-screen" >
-        <Header setmodalOverlay={setmodalOverlay} />
-        <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
+      <div className="dark:bg-black h-screen">
+        <Header />
+        <Body setImages={setImages} setIdx={setIdx} setOpenImageModal={setOpenImageViewer} />
       </div>
-      {openImageModal && <ImageModalOverlay images={images} idx={idx} setIdx={setIdx} setOpenImageModal={setOpenImageModal} loading={loading} setLoading={setLoading} />}
+      <ImageViewerDialog images={images} idx={idx} setIdx={setIdx} open={openImageViewer} onClose={() => setOpenImageViewer(false)} />
     </>
   )
 }
 
-function Body({ modalOverlay, setOpenImageModal, setIdx }) {
+function Body({ setOpenImageModal, setImages, setIdx }) {
   const queryClient = useQueryClient()
 
   const { isLoading, data } = useQuery('images', getAllImages)
@@ -48,8 +45,9 @@ function Body({ modalOverlay, setOpenImageModal, setIdx }) {
       })
   }
 
-  const openModal = (i, e) => {
-    // console.log(images[i]);
+  const openModal = (i) => {
+    console.log(i);
+    setImages(data.data.images)
     setIdx(i);
     setOpenImageModal(true);
   }
@@ -65,6 +63,7 @@ function Body({ modalOverlay, setOpenImageModal, setIdx }) {
           <img
             src={HOST + '/images/image/' + imageId}
             loading="lazy"
+            onClick={() => openModal(index)}
           />
         </Stack>
       ))}
