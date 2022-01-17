@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useAuth } from '../auth';
 import { Button, Menu, MenuItem } from '@mui/material'
+import { ImageUploadDialog } from './ImageUploadDialog';
 
 export default function Header({ setmodalOverlay }) {
   const navigate = useNavigate();
   const auth = useAuth()
 
   const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
+  const [open2, setOpen2] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -62,7 +64,7 @@ export default function Header({ setmodalOverlay }) {
           ? <MdOutlineDarkMode className="h-12 w-12 bg-white rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
           : <MdDarkMode className="h-12 w-12 rounded-full border-black p-2" onClick={() => setDarkMode(!darkMode)} />
         }
-        <Button variant="contained" onClick={() => setmodalOverlay(true)}>Add a photo</Button>
+        <Button variant="contained" onClick={() => setOpen2(true)}>Add a photo</Button>
         <Button
           id="basic-button"
           aria-controls={open ? 'basic-menu' : undefined}
@@ -86,6 +88,7 @@ export default function Header({ setmodalOverlay }) {
           <MenuItem onClick={handleClose} label="logout">Logout</MenuItem>
         </Menu>
       </div>
+      <ImageUploadDialog open={open2} onClose={() => setOpen2(false)} />
     </nav>
   )
 }

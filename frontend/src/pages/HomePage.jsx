@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { HOST } from '../App';
-import ModalOverlay from '../components/ModalOverlay';
 import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
@@ -16,6 +15,7 @@ function HomePage() {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true);
   const [idx, setIdx] = useState(-1);
+  
 
   return (
     <>
@@ -23,7 +23,6 @@ function HomePage() {
         <Header setmodalOverlay={setmodalOverlay} />
         <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
-      {modalOverlay && <ModalOverlay setmodalOverlay={setmodalOverlay} loading={loading} setLoading={setLoading} />}
       {openImageModal && <ImageModalOverlay images={images} idx={idx} setIdx={setIdx} setOpenImageModal={setOpenImageModal} loading={loading} setLoading={setLoading} />}
     </>
   )

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { HOST } from '../App';
-import ModalOverlay from '../components/ModalOverlay';
 import ImageModalOverlay from '../components/ImageModalOverlay';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
@@ -24,7 +23,6 @@ function OwnerPage() {
         <Header setmodalOverlay={setmodalOverlay} />
         <Body loading={loading} setLoading={setLoading} images={images} setImages={setImages} setIdx={setIdx} modalOverlay={modalOverlay} setOpenImageModal={setOpenImageModal} />
       </div>
-      {modalOverlay && <ModalOverlay setmodalOverlay={setmodalOverlay} loading={loading} setLoading={setLoading} />}
       {openImageModal && <ImageModalOverlay images={images} idx={idx} setIdx={setIdx} setOpenImageModal={setOpenImageModal} loading={loading} setLoading={setLoading} />}
     </>
   )
