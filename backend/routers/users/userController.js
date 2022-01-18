@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import prisma from '../../prisma.js'
+import prisma from '../../prismaClient.js'
 
 export const signup = async (req, res) => {
   const { email, password, username } = req.body
@@ -11,8 +11,6 @@ export const signup = async (req, res) => {
       email,
       hash_password,
       username,
-      v: 0,
-      created: new Date()
     }
   })
 
@@ -22,24 +20,28 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body
 
-  const user = await prisma.users.findUnique({
-    where: {
-      email: email
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        email
+      }
+    })
+
+    if (!user || !bcrypt.compareSync(password, user.hash_password)) {
+      res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
+      return
     }
-  })
 
-  if (!user || !bcrypt.compareSync(password, user.hash_password)) {
+    const signedToken = jwt.sign({ email: user.email, username: user.username, id: user.id }, 'RESTFULAPIs')
+
+    res.json({ token: signedToken });
+  } catch (error) {
     res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
-    return
   }
-
-  const signedToken = jwt.sign({ email: user.email, username: user.username, id: user.id }, 'RESTFULAPIs')
-
-  res.json({ token: signedToken });
 }
 
 export const profile = async (req, res) => {
-  if (req.user) {
+  if (!req.user) {
     res.status(401).json({ message: 'Invalid token' });
     return
   }

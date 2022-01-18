@@ -1,5 +1,5 @@
 import multer from 'multer'
-import prisma from '../../prisma.js'
+import prisma from '../../prismaClient.js'
 
 const upload = multer()
 
@@ -18,8 +18,8 @@ export const getImageById = async (req, res) => {
     }
   })
 
-  res.set('Content-Type', image.img.contentType)
-  res.send(Buffer.from(image.img.data.$binary.base64, 'base64'))
+  res.set('Content-Type', image.content_type)
+  res.send(Buffer.from(image.img.$binary.base64, 'base64'))
 }
 
 export const uploadSingleFile = upload.single('uploaded_file')
@@ -32,19 +32,15 @@ export const uploadImage = async (req, res) => {
     return
   }
 
-  console.log({ owner: req.user })
-
   const tags = [...req.body.tags.split(',')]
 
   const newimage = await prisma.images.create({
     data: {
       name: file.originalname,
-      img: {
-        data: file.buffer,
-        contentType: file.mimetype
-      },
-      ownerid: req.user._id,
-      tags: tags,
+      img: file.buffer,
+      content_type: file.mimetype,
+      ownerId: req.user.id,
+      tags: tags
     }
   });
 
@@ -52,12 +48,12 @@ export const uploadImage = async (req, res) => {
 }
 
 export const deleteImageById = async (req, res) => {
-  const { id } = req.params
+  const { id: imageId } = req.params
 
   await prisma.images.delete({
     where: {
-      id: id,
-      ownerid: req.user._id
+      id: imageId,
+      ownerId: req.user.id
     }
   })
 
@@ -67,7 +63,7 @@ export const deleteImageById = async (req, res) => {
 export const getAllOwnerImages = async (req, res) => {
   const images = await prisma.images.findMany({
     where: {
-      ownerid: req.user._id
+      ownerId: req.user.id
     }
   })
 
@@ -80,7 +76,7 @@ export const getOwnerImageById = async (req, res) => {
   const image = await prisma.images.findUnique({
     where: {
       id: imageId,
-      ownerid: req.user._id
+      ownerId: req.user.id
     }
   })
 
