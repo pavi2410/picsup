@@ -19,7 +19,7 @@ export const getImageById = async (req, res) => {
   })
 
   res.set('Content-Type', image.content_type)
-  res.send(Buffer.from(image.img.$binary.base64, 'base64'))
+  res.send(Buffer.from(image.img))
 }
 
 export const uploadSingleFile = upload.single('uploaded_file')
