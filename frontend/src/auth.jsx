@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
   }, [token])
 
   axios.interceptors.request.use(function (config) {
-    config.headers['Authorization'] = 'JWT ' + token;
+    config.headers['Authorization'] = 'Bearer ' + token;
 
     return config;
   });

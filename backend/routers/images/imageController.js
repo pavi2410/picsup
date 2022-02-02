@@ -61,6 +61,12 @@ export const deleteImageById = async (req, res) => {
 }
 
 export const getAllOwnerImages = async (req, res) => {
+  // todo: make it a middleware
+  if (!req.user) {
+    res.status(401).json({ message: 'Invalid token' });
+    return
+  }
+
   const images = await prisma.images.findMany({
     where: {
       ownerId: req.user.id
@@ -71,6 +77,11 @@ export const getAllOwnerImages = async (req, res) => {
 }
 
 export const getOwnerImageById = async (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ message: 'Invalid token' });
+    return
+  }
+
   const { id: imageId } = req.params
 
   const image = await prisma.images.findUnique({

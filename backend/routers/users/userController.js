@@ -32,7 +32,14 @@ export const login = async (req, res) => {
       return
     }
 
-    const signedToken = jwt.sign({ email: user.email, username: user.username, id: user.id }, 'RESTFULAPIs')
+    const signedToken = jwt.sign(
+      {
+        email: user.email,
+        username: user.username,
+        id: user.id
+      },
+      process.env.TOKEN_SECRET
+    )
 
     res.json({ token: signedToken });
   } catch (error) {

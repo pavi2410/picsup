@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import logger from 'morgan'
 import compression from 'compression'
-import jsonwebtoken from 'jsonwebtoken'
+import jwt, {UnauthorizedError} from 'express-jwt'
 
 import { fileURLToPath } from 'node:url'
 import path, { dirname } from 'node:path'
@@ -21,20 +21,11 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(compression())
-
-app.use((req, res, next) => {
-  const { authorization } = req.headers
-  if (authorization && authorization.startsWith('JWT')) {
-    const token = req.headers.authorization.split(' ')[1]
-    jsonwebtoken.verify(token, 'RESTFULAPIs', (err, payload) => {
-      req.user = err ? null : payload;
-      next();
-    });
-  } else {
-    req.user = null;
-    next();
-  }
-});
+app.use(jwt({
+  secret: process.env.TOKEN_SECRET,
+  algorithms: ['HS256'], 
+  credentialsRequired: false
+}));
 
 // ------- Request handlers -------
 
