@@ -15,16 +15,18 @@ export default function ImageUploadDialog({ onClose, open }) {
   const uploadImageMutation = useMutation(uploadImage)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      classifier
-        .then(it => it.classify(imageFileRef.current))
-        .then(result => {
-          const predictions = [...new Set(result[0].label.replaceAll(',', '').split(' '))]
-          console.log({ result, predictions })
-          setTags(predictions);
-        })
-    }, 1000)
-    return () => clearTimeout(timer);
+    if (file) {
+      const timer = setTimeout(() => {
+        classifier
+          .then(it => it.classify(imageFileRef.current))
+          .then(result => {
+            const predictions = [...new Set(result[0].label.replaceAll(',', '').split(' '))]
+            console.log({ result, predictions })
+            setTags(predictions);
+          })
+      }, 1000)
+      return () => clearTimeout(timer);
+    }
   }, [file])
 
   const handleClose = () => {
