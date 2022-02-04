@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from 'react-toastify';
+import { useMutation } from 'react-query'
 import { signupUser } from "../api/users";
+import { Button, TextField, Paper, Stack, Typography, Container, Link, Box } from '@mui/material'
+import { colors, theme } from "../theme";
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -25,28 +28,38 @@ export default function Signup() {
   }
 
   return (
-    <div className="p-20 h-screen w-screen flex flex-col-reverse md:flex-row items-center justify-center bg-green-100">
-      <div className="content text-3xl text-center md:text-left">
-        <h1 className="text-5xl text-green-500 font-bold pb-4">picsup</h1>
-        <p>See with friends and the world around you on picsup.</p>
-      </div>
-      <div className="container mx-auto flex flex-col items-center">
-        <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
-          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500" />
-          <button type="submit" className="w-full bg-green-500 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg" onClick={() => signup()}>Create New Account</button>
-          <button
-            className="w-full bg-blue-500 mt-8 mb-4 text-white p-3 rounded-lg font-semibold text-lg"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
-        </div>
-        <p className="text-center text-sm my-4">
-          <span className="font-semibold text-center w-full">View Photos</span> of celebrity, friends or family
-        </p>
-      </div>
-    </div>
+    <Box bgcolor={colors.green[100]}>
+      <Container>
+        <Stack direction={{ xs: 'column', md: "row" }} alignItems="center" justifyContent="center" spacing={8} sx={{ height: '100vh' }}>
+          <Stack px="3rem">
+            <Typography variant="h3" color="success.main" fontWeight="bold">picsup</Typography>
+            <Typography variant="h5">See with friends and the world around you on picsup.</Typography>
+          </Stack>
+          <Stack alignItems="center" justifyContent="center" spacing={2}>
+            <Paper sx={{ p: 2 }}>
+              <Stack spacing={2}>
+                <TextField variant="outlined" label="Username" type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)} />
+                <TextField variant="outlined" label="Email" type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)} />
+                <TextField variant="outlined" label="Password" type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} />
+                <Button variant="contained" size="large" disableElevation color="success"
+                  onClick={() => signup()}>
+                  Create New Account
+                </Button>
+                <Link href="/login" alignSelf="center">Already have an account?</Link>
+              </Stack>
+            </Paper>
+            <Typography>
+              <b>View Photos</b> of celebrity, friends or family
+            </Typography>
+          </Stack>
+        </Stack>
+      </Container>
+    </Box>
   )
 }

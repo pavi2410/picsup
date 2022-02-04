@@ -4,7 +4,8 @@ import { useAuth } from "../auth";
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query'
 import { loginUser } from '../api/users'
-import { Button, TextField } from '@mui/material'
+import { Button, TextField, Paper, Stack, Typography, Container, Link, Box } from '@mui/material'
+import { colors, theme } from "../theme";
 
 export default function Login() {
   const auth = useAuth();
@@ -31,35 +32,39 @@ export default function Login() {
   }
 
   return (
-    <div className="p-20 h-screen w-screen flex flex-col md:flex-row items-center justify-center bg-blue-100">
-      <div className="content text-3xl text-center md:text-left">
-        <h1 className="text-5xl text-blue-500 font-bold pb-4">picsup</h1>
-        <p>See with friends and the world around you on picsup.</p>
-      </div>
-      <div className="container mx-auto flex flex-col items-center">
-        <div className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg">
-          <TextField variant="outlined" label="Email" type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)} />
-          <TextField variant="outlined" label="password" type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} />
-          <Button variant="contained" size="large" disableElevation
-            onClick={() => login()}>
-            Login
-          </Button>
-          <a className="text-blue-400 text-center my-2">Forgot Pasword?</a>
-          <Button variant="outlined" size="large" color="success" disableElevation
-            onClick={() => navigate("/signup")}>
-            Create New Account
-          </Button>
-        </div>
-        <p className="text-center text-sm my-4">
-          <span className="font-semibold text-center w-full">View Photos</span>
-          {" "}
-          of celebrity, friends or family
-        </p>
-      </div>
-    </div>
+    <Box bgcolor={colors.blue[100]}>
+      <Container>
+        <Stack direction={{ xs: 'column', md: "row" }} alignItems="center" justifyContent="center" spacing={8} sx={{ height: '100vh' }}>
+          <Stack px="3rem">
+            <Typography variant="h3" color="primary" fontWeight="bold">picsup</Typography>
+            <Typography variant="h5">See with friends and the world around you on picsup.</Typography>
+          </Stack>
+          <Stack alignItems="center" justifyContent="center" spacing={2}>
+            <Paper sx={{ p: 2 }}>
+              <Stack spacing={2}>
+                <TextField variant="outlined" label="Email" type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)} />
+                <TextField variant="outlined" label="Password" type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} />
+                <Button variant="contained" size="large" disableElevation
+                  onClick={() => login()}>
+                  Login
+                </Button>
+                <Link alignSelf="center">Forgot Pasword?</Link>
+                <Button variant="outlined" size="large" color="success" disableElevation
+                  onClick={() => navigate("/signup")}>
+                  Create New Account
+                </Button>
+              </Stack>
+            </Paper>
+            <Typography>
+              <b>View Photos</b> of celebrity, friends or family
+            </Typography>
+          </Stack>
+        </Stack>
+      </Container>
+    </Box>
   );
 }
