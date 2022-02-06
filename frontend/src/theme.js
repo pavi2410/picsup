@@ -293,7 +293,7 @@ export const theme = createTheme({
       main: colors.green[500],
     },
     background: {
-      default: colors.green[100],
+      default: colors.green[50],
     }
   }
 })
