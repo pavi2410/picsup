@@ -55,8 +55,11 @@ export default function ImageUploadDialog({ onClose, open }) {
         <div className="pb-16">
           <label
             className="md:w-96 flex flex-col items-center px-4 py-6 bg-white dark:bg-black font-bold rounded-md shadow-md tracking-wide uppercase border border-green cursor-pointer hover:bg-green-500 hover:text-white text-green-600 ease-linear transition-all duration-150">
-            {!file ? <FaCloudUploadAlt fontSize="3rem" /> : null}
-            {file && <img className="max-h-64" src={URL.createObjectURL(file)} ref={imageFileRef} />}
+            {file ? (
+              <img className="max-h-64" src={URL.createObjectURL(file)} ref={imageFileRef} />
+            ) : (
+              <FaCloudUploadAlt fontSize="3rem" />
+            )}
             <span className="mt-2 text-base leading-normal">{file ? file.name : "Select a image"}</span>
             <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
           </label>
