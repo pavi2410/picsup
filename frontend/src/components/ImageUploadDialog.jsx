@@ -30,6 +30,8 @@ export default function ImageUploadDialog({ onClose, open }) {
   }, [file])
 
   const handleClose = () => {
+    setFile(null)
+    setTags([])
     onClose();
   };
 
@@ -52,7 +54,7 @@ export default function ImageUploadDialog({ onClose, open }) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Add a new photo</DialogTitle>
       <DialogContent>
-        <div className="pb-16">
+        <div>
           <label
             className="md:w-96 flex flex-col items-center px-4 py-6 bg-white dark:bg-black font-bold rounded-md shadow-md tracking-wide uppercase border border-green cursor-pointer hover:bg-green-500 hover:text-white text-green-600 ease-linear transition-all duration-150">
             {file ? (
@@ -64,7 +66,7 @@ export default function ImageUploadDialog({ onClose, open }) {
             <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
           </label>
         </div>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} pt={4}>
           {tags.map((tag, i) => (
             <Chip key={i} label={tag} color="primary" variant="outlined" />
           ))}
