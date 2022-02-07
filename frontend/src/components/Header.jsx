@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md';
-import { GoSearch } from 'react-icons/go';
+import {  MdKeyboardArrowDown } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../auth';
 import { Button, Menu, MenuItem } from '@mui/material'
@@ -54,10 +53,12 @@ export default function Header() {
         <Button variant="contained" onClick={() => setOpen2(true)}>Add a photo</Button>
         <Button
           id="basic-button"
+          variant="outlined"
           aria-controls={open ? 'basic-menu' : undefined}
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
+          endIcon={<MdKeyboardArrowDown />}
         >
           {auth.user.username}
         </Button>
