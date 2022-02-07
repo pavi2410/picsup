@@ -57,7 +57,7 @@ function Body({ setOpenImageModal, setImages, setIdx }) {
   }
 
   return (
-    <Masonry columns={3} spacing={2}>
+    <Masonry columns={{ xs: 1, sm: 2, md: 4 }} spacing={2} sx={{ pl: 4 }}>
       {data?.data?.images.map((imageId, index) => (
         <Stack key={index} borderRadius={48}>
           <img
