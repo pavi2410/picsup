@@ -7,8 +7,8 @@ export function getAllImages() {
   return axios.get(IMAGES_HOST + '/images')
 }
 
-export function getImageById({ imageId }) {
-  return axios.get(IMAGES_HOST + '/image/' + imageId)
+export function getImageById(imageId) {
+  return IMAGES_HOST + '/image/' + imageId
 }
 
 export function uploadImage() {

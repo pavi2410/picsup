@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import { HOST } from '../App';
 import ImageViewerDialog from '../components/ImageViewerDialog';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
-import { Stack } from '@mui/material'
+import { Box } from '@mui/material'
 import { Masonry } from '@mui/lab'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { deleteImageById, getAllImages } from '../api/images';
+import { deleteImageById, getAllImages, getImageById } from '../api/images';
 
 function HomePage() {
   const [openImageViewer, setOpenImageViewer] = useState(false);
@@ -46,7 +45,6 @@ function Body({ setOpenImageModal, setImages, setIdx }) {
   }
 
   const openModal = (i) => {
-    console.log(i);
     setImages(data.data.images)
     setIdx(i);
     setOpenImageModal(true);
@@ -59,16 +57,23 @@ function Body({ setOpenImageModal, setImages, setIdx }) {
   return (
     <Masonry columns={{ xs: 1, sm: 2, md: 4 }} spacing={2} sx={{ pl: 4 }}>
       {data?.data?.images.map((imageId, index) => (
-        <Stack key={index} borderRadius={48}>
-          <img
-            src={HOST + '/images/image/' + imageId}
-            loading="lazy"
-            onClick={() => openModal(index)}
-          />
-        </Stack>
+        <ImageCard key={index} imageId={imageId} onClick={() => openModal(index)} />
       ))}
     </Masonry>
   );
+}
+
+function ImageCard({ imageId, onClick }) {
+  return (
+    <Box w="1" bgcolor="white" borderRadius="1rem">
+      <img
+        src={getImageById(imageId)}
+        loading="lazy"
+        style={{ borderRadius: '1rem', width: '100%' }}
+        onClick={onClick}
+      />
+    </Box>
+  )
 }
 
 export default HomePage
