@@ -2,6 +2,14 @@ picsup
 ---
 An image sharing platform. It is a our fullstack web project. [Android app available](https://github.com/pavi2410/picsup-Android).
 
+### Features
+- User Authentication
+- Image upload
+- Image storage
+- Routing
+- Image search
+- Image classification using ML
+
 ### Screenshots
 ![home page](./image.png)
 
