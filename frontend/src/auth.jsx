@@ -16,8 +16,9 @@ function AuthProvider({ children }) {
   }, [token])
 
   axios.interceptors.request.use(function (config) {
-    config.headers['Authorization'] = 'Bearer ' + token;
-
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + token;
+    }
     return config;
   });
 
