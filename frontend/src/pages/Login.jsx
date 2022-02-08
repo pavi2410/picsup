@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
+import { Link } from "react-router-dom";
 import { useAuth } from "../auth";
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query'
 import { loginUser } from '../api/users'
-import { Button, TextField, Paper, Stack, Typography, Container, Link, Box } from '@mui/material'
-import { colors, theme } from "../theme";
+import { Button, TextField, Paper, Stack, Typography, Container, Link as ChakraLink, Box } from '@mui/material'
+import { colors } from "../theme";
 
 export default function Login() {
   const auth = useAuth();
@@ -32,7 +33,7 @@ export default function Login() {
   }
 
   return (
-    <Box bgcolor={colors.blue[100]}>
+    <Box bgcolor={colors.green[100]}>
       <Container>
         <Stack direction={{ xs: 'column', md: "row" }} alignItems="center" justifyContent="center" spacing={8} sx={{ height: '100vh' }}>
           <Stack px="3rem">
@@ -52,9 +53,8 @@ export default function Login() {
                   onClick={() => login()}>
                   Login
                 </Button>
-                <Link alignSelf="center">Forgot Pasword?</Link>
-                <Button variant="outlined" size="large" color="success" disableElevation
-                  onClick={() => navigate("/signup")}>
+                <ChakraLink alignSelf="center">Forgot Pasword?</ChakraLink>
+                <Button variant="outlined" size="large" color="success" disableElevation as={Link} to="/signup">
                   Create New Account
                 </Button>
               </Stack>

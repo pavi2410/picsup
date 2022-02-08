@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useMutation } from 'react-query'
 import { signupUser } from "../api/users";
-import { Button, TextField, Paper, Stack, Typography, Container, Link, Box } from '@mui/material'
-import { colors, theme } from "../theme";
+import { Button, TextField, Paper, Stack, Typography, Container, Link as ChakraLink, Box } from '@mui/material'
+import { colors } from "../theme";
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -51,7 +52,7 @@ export default function Signup() {
                   onClick={() => signup()}>
                   Create New Account
                 </Button>
-                <Link href="/login" alignSelf="center">Already have an account?</Link>
+                <ChakraLink to="/login" component={Link} alignSelf="center">Already have an account?</ChakraLink>
               </Stack>
             </Paper>
             <Typography>
