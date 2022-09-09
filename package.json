@@ -3,7 +3,8 @@
   "scripts": {
     "dev:setup": "rimraf frontend/dist && pnpm -r install",
     "dev": "pnpm -r dev",
-    "start": "pnpm -F frontend build && pnpm -F backend start"
+    "build": "pnpm -F frontend build",
+    "start": "pnpm -F backend start"
   },
   "devDependencies": {
     "rimraf": "^3.0.2"
