@@ -36,6 +36,10 @@ app.use(jwt({
 app.use('/api/users', userRouter)
 app.use('/api/images', imageRouter)
 
+app.get('/health', (req, res) => {
+  res.send('OK')
+})
+
 app.use(express.static(path.resolve(__dirname, "../frontend/dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
