@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {  MdKeyboardArrowDown } from 'react-icons/md';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth';
 import { Button, Menu, MenuItem } from '@mui/material'
 import ImageUploadDialog from './ImageUploadDialog';
