@@ -29,10 +29,6 @@ app.use(jwt({
 
 // ------- Request handlers -------
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World!')
-// })
-
 app.use('/api/users', userRouter)
 app.use('/api/images', imageRouter)
 
@@ -40,10 +36,16 @@ app.get('/health', (req, res) => {
   res.send('OK')
 })
 
-app.use(express.static(path.resolve(__dirname, "../frontend/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.resolve(__dirname, "../frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+}
 
 const port = process.env.PORT || 4000
 app.listen(port, () => {
