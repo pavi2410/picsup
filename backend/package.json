@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon -r dotenv/config index.js"
+    "prisma:client": "prisma generate",
+    "start": "npm run prisma:client && node index.js",
+    "dev": "npm run prisma:client && nodemon -r dotenv/config index.js"
   },
   "author": "",
   "license": "ISC",
