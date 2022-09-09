@@ -1,8 +1,15 @@
 picsup
 ---
-An image sharing platform. It is a our fullstack web project. [Android app available](https://github.com/pavi2410/picsup-Android).
+An image sharing platform. It is a our fullstack web project.
 
-### Features
+Created by Tilak and [Pavitra](https://pavi2410.me)
+
+> **Note** I've also made an Android client for picusp https://github.com/pavi2410/picsup-Android
+
+## Screenshot
+![home page](./image.png)
+
+## Features
 - User Authentication
 - Image upload
 - Image storage
@@ -10,18 +17,9 @@ An image sharing platform. It is a our fullstack web project. [Android app avail
 - Image search
 - Image classification using ML
 
-### Screenshots
-![home page](./image.png)
+## Tech Stack (MERN)
 
-### Usage
-
-To start the backend and frontend processes
-```
-npm run dev
-```
-
-### Tech Stack (MERN)
-#### Backend
+### Backend
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/)
 - [MongoDB](https://www.mongodb.com/)
@@ -29,11 +27,16 @@ npm run dev
 - [Morgan](https://www.npmjs.com/package/morgan)
 - [Multer](https://www.npmjs.com/package/multer)
 
-#### Frontend
+### Frontend
 - [React](https://reactjs.org/)
-- [React Router](https://reacttraining.com/react-router/)
+- [React Router](https://reactrouter.com)
 - [Vite](https://vitejs.org/)
 - [Material-UI](https://mui.com/)
 - [TailwindCSS](https://tailwindcss.com/)
 
-### Created by Tilak and [Pavitra](https://pavi2410.me)
+## Usage
+
+To start both the backend and frontend processes
+```
+pnpm dev
+```
