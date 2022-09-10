@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import logger from 'morgan'
 import compression from 'compression'
-import jwt, {UnauthorizedError} from 'express-jwt'
+import { expressjwt } from 'express-jwt'
 
 import { fileURLToPath } from 'node:url'
 import path, { dirname } from 'node:path'
@@ -21,7 +21,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(compression())
-app.use(jwt({
+app.use(expressjwt({
   secret: process.env.TOKEN_SECRET,
   algorithms: ['HS256'], 
   credentialsRequired: false
