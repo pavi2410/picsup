@@ -1,12 +1,12 @@
 {
   "name": "picsup",
+  "private": true,
   "scripts": {
-    "dev:setup": "rimraf frontend/dist && pnpm -r install",
-    "dev": "pnpm -r dev",
-    "build": "pnpm -F frontend build",
-    "start": "pnpm -F backend start"
+    "build": "bun --filter=frontend run build",
+    "start": "bun --filter=backend run start"
   },
-  "devDependencies": {
-    "rimraf": "^3.0.2"
-  }
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
 }
