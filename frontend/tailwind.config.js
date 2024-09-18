@@ -1,17 +1,17 @@
-const colors = require('tailwindcss/colors')
+import { nextui } from "@nextui-org/react";
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
-    './src/**/*.html',
-    './src/**/*.jsx'
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {
-      colors: {
-        green: colors.emerald,
-      }
-    },
+    extend: {},
   },
-  plugins: [],
+  darkMode: "class",
+  plugins: [
+    nextui(),
+  ],
 }
