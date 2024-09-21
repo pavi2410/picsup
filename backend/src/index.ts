@@ -6,7 +6,7 @@ import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { logger } from 'hono/logger'
 
-import { JWT_SECRET, PORT } from './config.js'
+import { CORS_ORIGIN, JWT_SECRET, PORT } from './config.js'
 import imageRouter from './routers/imageRouter.js'
 import authRouter from './routers/authRouter.js'
 import userRouter from './routers/userRouter.js'
@@ -21,7 +21,7 @@ type Variables = JwtVariables
 export const app = new Hono<{ Variables: Variables }>()
 
 app.use(logger())
-app.use(cors())
+app.use(cors({ origin: CORS_ORIGIN, credentials: true }))
 app.use(compress())
 app.use("/api/*", jwt({
   secret: JWT_SECRET,

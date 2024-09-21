@@ -32,12 +32,7 @@ router.post('/signup', async (c) => {
         JWT_SECRET!,
     )
 
-    setCookie(c, 'jwt', signedToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 86400,
-    })
+    setCookie(c, 'jwt', signedToken)
     c.status(200)
     return c.body(null)
 });
@@ -65,12 +60,7 @@ router.post('/login', async (c) => {
             JWT_SECRET!,
         )
 
-        setCookie(c, 'jwt', signedToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            maxAge: 86400,
-        })
+        setCookie(c, 'jwt', signedToken)
         c.status(200)
         return c.body(null)
     } catch (error) {
