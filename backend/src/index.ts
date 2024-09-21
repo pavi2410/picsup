@@ -7,6 +7,7 @@ import { logger } from 'hono/logger'
 
 import { JWT_SECRET, PORT } from './config.js'
 import imageRouter from './routers/imageRouter.js'
+import authRouter from './routers/authRouter.js'
 import userRouter from './routers/userRouter.js'
 
 if (!JWT_SECRET) {
@@ -14,16 +15,17 @@ if (!JWT_SECRET) {
   process.exit(1)
 }
 
-const app = new Hono()
+export const app = new Hono()
 
 app.use(logger())
 app.use(cors())
 app.use(compress())
-app.use(jwt({
+app.use("/api/*", jwt({
   secret: JWT_SECRET,
 }));
 
-app.route('/api/users', userRouter)
+app.route('/auth', authRouter)
+app.route('/api/user', userRouter)
 app.route('/api/images', imageRouter)
 
 app.get('/health', (c) => c.text('OK'))
@@ -34,6 +36,8 @@ if (process.env.NODE_ENV === 'production') {
   app.get('/', (c) => c.text('Hello World from picsup!'));
 }
 
+console.log(`picsup server running on port ${PORT}`)
+export type App = typeof app;
 export default {
   port: PORT,
   fetch: app.fetch,

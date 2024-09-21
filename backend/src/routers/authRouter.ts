@@ -2,24 +2,10 @@ import { eq } from "drizzle-orm";
 import { Hono } from 'hono';
 import { sign } from 'hono/jwt';
 import { JWT_SECRET } from '../config.js';
-import { db, users } from '../db.js';
+import { db } from '../db/index.js';
+import { users } from '../db/schema.js';
 
 const router = new Hono()
-
-router.post('/profile', async (c) => {
-    // if (!req.user) {
-    //     res.status(401).json({ message: 'Invalid token' });
-    //     return
-    // }
-
-    const { userId } = c.req.json<{
-        userId: string,
-    }>();
-
-    const user = (await db.select().from(users).where(eq('id', userId)))[0];
-
-    return c.json({ user })
-});
 
 router.post('/signup', async (c) => {
     const { email, password, username } = await c.req.json<{
@@ -46,26 +32,27 @@ router.post('/login', async (c) => {
     }>();
 
     try {
-        const user = (await db.select().from(users).where(eq('email', email)))[0];
+        const user = await db.select().from(users).where(eq(users.email, email)).get();
 
         if (!user || !user.passwordHash || !(await Bun.password.verify(password, user.passwordHash))) {
             c.status(401)
             return c.text('Authentication failed. Invalid user or password.');
         }
 
-        const signedToken = sign(
+        const signedToken = await sign(
             {
                 email: user.email,
                 username: user.name,
                 id: user.id
             },
-            JWT_SECRET,
+            JWT_SECRET!,
         )
 
         return c.json({ token: signedToken });
     } catch (error) {
+        console.error(error);
         c.status(401)
-        return c.text('Authentication failed. Invalid user or password.');
+        return c.text('Authentication failed. Invalid user or password.' + error.message);
     }
 });
 

@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { Hono } from 'hono';
-import { db, images } from '../db.js';
+import { db } from '../db/index.js';
+import { images } from '../db/schema.js';
 
 const router = new Hono()
 
@@ -20,22 +21,24 @@ router.get('/image/:id', async (c) => {
     return c.text('TODO: send image file')
 })
 
-router.post('/upload', upload.single('uploaded_file'), async (c) => {
-    const file = req.file;
+router.post('/upload', async (c) => {
+    const body = await c.req.formData();
 
-    if (!file) {
+    const uploadedFile = body.get('uploaded_file');
+
+    if (!uploadedFile) {
         c.status(400)
         return c.text("Please upload a file");
     }
 
-    const tags = [...req.body.tags.split(',')]
+    const tags = body.get('tags')?.split(',') ?? []
 
     // save image to IMAGES_DIR and save image info to database
 
     const newimage = await db.insert(images).values({
-        name: file.originalname,
-        content_type: file.mimetype,
-        ownerId: req.user.id,
+        name: body.get('originalname'),
+        content_type: body.get('mimetype'),
+        ownerId: c.get('user').id,
         tags: tags
     });
 
@@ -70,7 +73,7 @@ router.get('/ownerimage/:id', async (c) => {
 
     const { id: imageId } = c.req.param()
 
-    const image = (await db.select().from(images).where(and(eq('id', imageId), eq('ownerId', req.user.id)))[0];
+    const image = (await db.select().from(images).where(and(eq('id', imageId), eq('ownerId', req.user.id))))[0];
 
     c.header('Content-Type', image.mimetype)
     // c.send(image.img.data)
