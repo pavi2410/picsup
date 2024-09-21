@@ -1,33 +1,19 @@
 import { Card, CardBody } from '@nextui-org/react';
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'sonner';
-import { deleteImageById, getAllImages, getImageById } from '../api/images';
-import Header from '../components/Header';
-import ImageViewerDialog from '../components/ImageViewerDialog';
-import Loader from '../components/Loader';
-import Masonry from '../components/Masonry';
+import { deleteImageById, getAllOwnerImages, getImageById } from '../../api/images';
+import Header from '../../components/Header';
+import ImageViewerDialog from '../../components/ImageViewerDialog';
+import Loader from '../../components/Loader';
+import Masonry from '../../components/Masonry';
 
-export const Route = createFileRoute('/')({
-  component: Index,
-  beforeLoad: async ({ location }) => {
-    console.log('jwt', document.cookie, document.cookie.includes('jwt='))
-    if (!document.cookie.includes('jwt=')) {
-      throw redirect({
-        to: '/login',
-        search: {
-          // Use the current location to power a redirect after login
-          // (Do not use `router.state.resolvedLocation` as it can
-          // potentially lag behind the actual current location)
-          redirect: location.href,
-        },
-      })
-    }
-  },
+export const Route = createFileRoute('/me/images')({
+  component: OwnerImages,
 })
 
-function Index() {
+function OwnerImages() {
   const [openImageViewer, setOpenImageViewer] = useState(false);
   const [images, setImages] = useState([])
   const [idx, setIdx] = useState(-1);
@@ -46,12 +32,12 @@ function Index() {
 function Body({ setOpenImageModal, setImages, setIdx }) {
   const queryClient = useQueryClient()
 
-  const { isLoading, data } = useQuery({ queryKey: 'images', queryFn: getAllImages })
+  const { isLoading, data } = useQuery({ queryKey: 'owner-images', queryFn: getAllOwnerImages })
   const deleteImageMutation = useMutation({
     mutationFn: deleteImageById,
     onSuccess: () => {
       toast.success("Image Sucessfully Deleted!!");
-      queryClient.invalidateQueries('images')
+      queryClient.invalidateQueries('owner-images')
     },
     onError: () => {
       toast("Something went wrong! throw your pc");
@@ -63,6 +49,7 @@ function Body({ setOpenImageModal, setImages, setIdx }) {
   }
 
   const openModal = (i) => {
+    console.log(i);
     setImages(data.data.images)
     setIdx(i);
     setOpenImageModal(true);
