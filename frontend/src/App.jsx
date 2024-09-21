@@ -5,8 +5,6 @@ import OwnerPage from './pages/OwnerPage'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider, RequireAuth } from './auth'
 
-export const HOST = window.location.hostname === 'localhost' ? "http://localhost:4000/api" : '/api';
-
 function App() {
   return (
     <AuthProvider>

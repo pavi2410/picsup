@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ImageViewerDialog from '../components/ImageViewerDialog';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Box } from '@mui/material'
 import { Masonry } from '@mui/lab'
 import { useQuery, useMutation, useQueryClient } from 'react-query'

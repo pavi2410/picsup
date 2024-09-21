@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { HOST } from '../App';
 import ImageViewerDialog from '../components/ImageViewerDialog';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 import { FaTrashAlt } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Stack } from '@mui/material'
 import { Masonry } from '@mui/lab'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
@@ -62,7 +61,7 @@ function Body({ setOpenImageModal, setImages, setIdx }) {
       {data?.data?.images?.map((imageId, index) => (
         <Stack key={index} borderRadius={48}>
           <img
-            src={HOST + '/images/image/' + imageId}
+            src={API_HOST + '/images/image/' + imageId}
             loading="lazy"
             onClick={() => openModal(index)}
           />

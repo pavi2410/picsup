@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material'
-import { HOST } from '../App';
+import { API_HOST } from '../config'
 
 export default function ImageViewerDialog({ onClose, open, images, idx, setIdx }) {
   const handleClose = () => {
@@ -9,7 +9,7 @@ export default function ImageViewerDialog({ onClose, open, images, idx, setIdx }
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogContent>
-        <img src={HOST + '/images/image/' + images[idx]} />
+        <img src={API_HOST + '/images/image/' + images[idx]} />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>

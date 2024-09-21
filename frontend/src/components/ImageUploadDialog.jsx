@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import ml5 from 'ml5'
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { uploadImage } from "../api/images";

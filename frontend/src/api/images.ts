@@ -1,7 +1,5 @@
 import axios from 'axios'
-
-const HOST = window.location.hostname === 'localhost' ? "http://localhost:4000/api" : '/api';
-const IMAGES_HOST = HOST + "/images"
+import { IMAGES_HOST } from './config'
 
 export function getAllImages() {
   return axios.get(IMAGES_HOST + '/images')
