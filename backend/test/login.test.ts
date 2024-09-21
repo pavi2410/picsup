@@ -1,10 +1,10 @@
 import { describe, expect, it } from "bun:test";
 import { app } from "../src";
-import { decode } from "hono/jwt";
 
 describe('Test API routes', () => {
   it('GET /health', async () => {
     const res = await app.request('/health');
+    expect(res).toBeDefined();
     expect(res.ok).toBe(true);
   });
 
@@ -17,10 +17,12 @@ describe('Test API routes', () => {
         username: 'testuser'
       })
     });
+    expect(res).toBeDefined();
     expect(res.ok).toBe(true);
+    expect(res.headers.get('Set-Cookie')).toBeDefined();
   })
 
-  let token: string;
+  let cookie: string;
 
   it('should login the user - POST /auth/login', async () => {
     const res = await app.request('/auth/login', {
@@ -30,22 +32,22 @@ describe('Test API routes', () => {
         password: 'testpassword'
       })
     });
+    expect(res).toBeDefined();
     expect(res.ok).toBe(true);
+    expect(res.headers.get('Set-Cookie')).toBeDefined();
 
-    const json = await res.json();
-    token = json.token;
+    cookie = res.headers.get('Set-Cookie')!;
   })
 
   it('should return user profile - GET /api/user/profile', async () => {
-    const userId = decode(token).payload.id;
+    expect(cookie).toBeDefined();
+
     const res = await app.request('/api/user/profile', {
       headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        userId
-      })
+        Cookie: cookie
+      }
     });
+    expect(res).toBeDefined();
     expect(res.ok).toBe(true);
   })
 });

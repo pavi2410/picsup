@@ -3,6 +3,7 @@ import { serveStatic } from 'hono/bun'
 import { compress } from 'hono/compress'
 import { cors } from 'hono/cors'
 import { jwt } from 'hono/jwt'
+import type { JwtVariables } from 'hono/jwt'
 import { logger } from 'hono/logger'
 
 import { JWT_SECRET, PORT } from './config.js'
@@ -15,13 +16,16 @@ if (!JWT_SECRET) {
   process.exit(1)
 }
 
-export const app = new Hono()
+type Variables = JwtVariables
+
+export const app = new Hono<{ Variables: Variables }>()
 
 app.use(logger())
 app.use(cors())
 app.use(compress())
 app.use("/api/*", jwt({
   secret: JWT_SECRET,
+  cookie: 'jwt',
 }));
 
 app.route('/auth', authRouter)

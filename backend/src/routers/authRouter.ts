@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { Hono } from 'hono';
 import { sign } from 'hono/jwt';
+import { setCookie } from 'hono/cookie'
 import { JWT_SECRET } from '../config.js';
 import { db } from '../db/index.js';
 import { users } from '../db/schema.js';
@@ -16,13 +17,29 @@ router.post('/signup', async (c) => {
 
     const passwordHash = await Bun.password.hash(password);
 
-    await db.insert(users).values({
+    const newUser = await db.insert(users).values({
         email,
         passwordHash,
         name: username,
-    });
+    }).returning();
 
-    return c.json("User added");
+    const signedToken = await sign(
+        {
+            email,
+            username,
+            id: newUser[0].id,
+        },
+        JWT_SECRET!,
+    )
+
+    setCookie(c, 'jwt', signedToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 86400,
+    })
+    c.status(200)
+    return c.body(null)
 });
 
 router.post('/login', async (c) => {
@@ -48,9 +65,15 @@ router.post('/login', async (c) => {
             JWT_SECRET!,
         )
 
-        return c.json({ token: signedToken });
+        setCookie(c, 'jwt', signedToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 86400,
+        })
+        c.status(200)
+        return c.body(null)
     } catch (error) {
-        console.error(error);
         c.status(401)
         return c.text('Authentication failed. Invalid user or password.' + error.message);
     }

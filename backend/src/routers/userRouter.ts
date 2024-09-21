@@ -6,11 +6,9 @@ import { users } from '../db/schema.js';
 const router = new Hono()
 
 router.get('/profile', async (c) => {
-    const { userId } = await c.req.json<{
-        userId: string,
-    }>();
+    const payload = c.get('jwtPayload');
 
-    const user = (await db.select().from(users).where(eq(users.id, userId)))[0];
+    const user = (await db.select().from(users).where(eq(users.id, payload.id)))[0];
 
     return c.json({
         id: user.id,
