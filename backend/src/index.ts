@@ -37,6 +37,7 @@ app.get('/health', (c) => c.text('OK'))
 
 if (process.env.NODE_ENV === 'production') {
   app.use("*", serveStatic({ root: "../frontend/dist" }));
+  app.get('*', serveStatic({ path: '../frontend/dist/index.html' }));
 } else {
   app.get('/', (c) => c.text('Hello World from picsup!'));
 }
