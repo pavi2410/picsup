@@ -6,8 +6,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun src/index.ts",
-    "dev": "bun --env-file=./.env src/index.ts",
+    "start": "bun run migrate.ts && bun run src/index.ts",
+    "dev": "bun --env-file=./.env run src/index.ts",
     "test": "bun --env-file=./.env test --timeout 1000 --bail",
     "db:generate": "bunx drizzle-kit generate",
     "db:migrate": "bun --env-file=./.env run migrate.ts"
