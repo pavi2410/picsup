@@ -1,13 +1,12 @@
 import "@fontsource/poppins"; // 400
 import { NextUIProvider } from "@nextui-org/react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 import "tailwindcss/tailwind.css";
 import './main.css';
-import axios from "axios";
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
@@ -21,8 +20,6 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
 }
-
-axios.defaults.withCredentials = true;
 
 const queryClient = new QueryClient()
 

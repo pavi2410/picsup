@@ -36,7 +36,7 @@ export default function Header() {
 
   return (
     <>
-      <Navbar maxWidth='full'>
+      <Navbar maxWidth='full' isBordered>
         <NavbarBrand>
           <div>
             <h1 className="font-bold tracking-wider text-2xl text-green-500 cursor-pointer" onClick={() => navigate({ to: '/' })}>picsup</h1>

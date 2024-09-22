@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Input, Link } from '@nextui-org/react';
+import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from "react";
-import { useMutation } from 'react-query';
 import { toast } from 'sonner';
 import { signupUser } from "../../api/users";
 

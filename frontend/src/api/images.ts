@@ -1,27 +1,30 @@
-import axios from 'axios'
+import ky from 'ky'
 import { IMAGES_HOST } from './config'
 
 export function getAllImages() {
-  return axios.get(IMAGES_HOST + '/images')
+  return ky.get(IMAGES_HOST + '/public', { credentials: 'include' }).json<{ images: number[] }>()
 }
 
 export function getImageById(imageId) {
-  return IMAGES_HOST + '/image/' + imageId
+  return IMAGES_HOST + '/public/' + imageId
 }
 
-export function uploadImage() {
-  return axios.post(IMAGES_HOST + '/upload')
+export function uploadImage(imageData: FormData) {
+  return ky.post(IMAGES_HOST, {
+    credentials: 'include',
+    body: imageData
+  }).json<{ id: number }>()
 }
 
-export function deleteImageById({ imageId }) {
-  return axios.delete(IMAGES_HOST + '/image/' + imageId)
+export function deleteImageById(imageId) {
+  return ky.delete(IMAGES_HOST + '/' + imageId, { credentials: 'include' })
 }
 
 
 export function getAllOwnerImages() {
-  return axios.get(IMAGES_HOST + '/ownerimages')
+  return ky.get(IMAGES_HOST, { credentials: 'include' }).json<{ images: number[] }>()
 }
 
-export function getOwnerImageById({ ownerId }) {
-  return axios.get(IMAGES_HOST + '/ownerimage/' + ownerId)
+export function getOwnerImageById(ownerId) {
+  return IMAGES_HOST + '/' + ownerId
 }

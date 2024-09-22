@@ -1,10 +1,9 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Input, Link } from '@nextui-org/react';
+import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from "react";
-import { useMutation } from 'react-query';
 import { toast } from 'sonner';
 import { loginUser } from '../../api/users.js';
-import { Divide } from 'lucide-react';
 
 export const Route = createFileRoute('/(auth)/login')({
   component: Login,
@@ -23,7 +22,8 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const loginMutation = useMutation({
-    mutationFn: loginUser, onSuccess: () => {
+    mutationFn: loginUser,
+    onSuccess: () => {
       toast.success("Welcome to picsup!!");
       navigate({ to: '/' });
     },

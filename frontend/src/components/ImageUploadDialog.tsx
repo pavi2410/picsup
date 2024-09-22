@@ -1,59 +1,53 @@
-import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from '@nextui-org/react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CloudUploadIcon } from 'lucide-react';
-import ml5 from 'ml5';
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation } from 'react-query';
+import { useRef, useState } from "react";
 import { toast } from 'sonner';
 import { uploadImage } from "../api/images";
+import { getTagsFromImage } from '../imageClassifier';
 
 export default function ImageUploadDialog({ open, setOpen }) {
   const imageFileRef = useRef()
-  const classifier = useMemo(() => ml5.imageClassifier('MobileNet', { topk: 1 }), [])
-  const [file, setFile] = useState(null);
-  const [tags, setTags] = useState([]);
+  const [file, setFile] = useState<File | null>(null);
+
+  const queryClient = useQueryClient()
+
+  const tagsQuery = useQuery({
+    enabled: file !== null,
+    queryKey: ['tags', file?.name],
+    queryFn: () => getTagsFromImage(imageFileRef.current)
+  })
 
   const uploadImageMutation = useMutation({
     mutationFn: uploadImage,
     onSuccess: () => {
       toast.success("File Uploaded Sucessfully!!");
-      setFile(null);
+      setOpen(false)
+      queryClient.invalidateQueries({ queryKey: ['public_images'] })
+      queryClient.invalidateQueries({ queryKey: ['images'] })
     },
     onError: () => {
       toast.error("Some error occured! Try harder ;)");
     }
   });
 
-  useEffect(() => {
-    if (file) {
-      const timer = setTimeout(() => {
-        classifier
-          .then(it => it.classify(imageFileRef.current))
-          .then(result => {
-            const predictions = [...new Set(result[0].label.replaceAll(',', '').split(' '))]
-            console.log({ result, predictions })
-            setTags(predictions);
-          })
-      }, 1000)
-      return () => clearTimeout(timer);
+  const handleOpnChange = (isOpen: boolean) => {
+    setOpen(isOpen)
+    if (!isOpen) {
+      setFile(null)
     }
-  }, [file])
-
-  const handleClose = () => {
-    setFile(null)
-    setTags([])
-    setOpen(false);
   };
 
   const uploadFile = () => {
     const formData = new FormData()
-    formData.append('uploaded_file', file)
-    formData.append('tags', tags)
+    formData.append('file', file)
+    formData.append('tags', tagsQuery.data?.join(',') ?? '')
 
     uploadImageMutation.mutateAsync(formData);
   }
 
   return (
-    <Modal isOpen={open} onOpenChange={setOpen}>
+    <Modal isOpen={open} onOpenChange={handleOpnChange}>
       <ModalContent>
         {(onClose) => (
           <>
@@ -73,15 +67,23 @@ export default function ImageUploadDialog({ open, setOpen }) {
                   <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0])} />
                 </label>
               </div>
-              <div className="flex flex-row gap-2 pt-4">
-                {tags.map((tag, i) => (
-                  <Chip key={i} color="primary" variant="bordered">{tag}</Chip>
-                ))}
-              </div>
+              {
+                tagsQuery.isLoading ? (
+                  <Spinner label='Loading...' />
+                ) : tagsQuery.isError ? (
+                  <p>Error loading tags</p>
+                ) : (
+                  <div className="flex flex-row flex-wrap gap-2 pt-4">
+                    {tagsQuery.data?.map((tag, i) => (
+                      <Chip key={i} color="primary" variant="bordered">{tag}</Chip>
+                    ))}
+                  </div>
+                )
+              }
             </ModalBody>
             <ModalFooter>
-              <Button onPress={onClose}>Close</Button>
-              <Button onPress={uploadFile}>Upload</Button>
+              <Button variant='bordered' onPress={onClose}>Close</Button>
+              <Button color='success' onPress={uploadFile}>Upload</Button>
             </ModalFooter>
           </>
         )}
