@@ -2,82 +2,101 @@ import { and, eq } from "drizzle-orm";
 import { Hono } from 'hono';
 import { db } from '../db/index.js';
 import { images } from '../db/schema.js';
+import { IMAGES_DIR } from "../config.js";
+import { basename } from 'node:path';
 
 const router = new Hono()
 
-router.get('/images', async (c) => {
+router.get('/public', async (c) => {
     const imageList = await db.select().from(images)
 
     return c.json({ images: imageList.map(image => image.id) })
 })
 
-router.get('/image/:id', async (c) => {
+router.get('/public/:id', async (c) => {
     const { id: imageId } = c.req.param()
 
-    const image = (await db.select().from(images).where(eq('id', imageId)))[0];
+    const image = await db.select().from(images).where(eq(images.id, Number(imageId))).get();
 
-    c.header('Content-Type', image.content_type!)
-    // c.body(Buffer.from(image.img))
-    return c.text('TODO: send image file')
-})
-
-router.post('/upload', async (c) => {
-    const body = await c.req.formData();
-
-    const uploadedFile = body.get('uploaded_file');
-
-    if (!uploadedFile) {
-        c.status(400)
-        return c.text("Please upload a file");
+    if (!image) {
+        c.status(404)
+        return c.body(null);
     }
 
-    const tags = body.get('tags')?.split(',') ?? []
+    const contentFile = Bun.file(`${IMAGES_DIR}/${image.contentHash}`);
 
-    // save image to IMAGES_DIR and save image info to database
-
-    const newimage = await db.insert(images).values({
-        name: body.get('originalname'),
-        content_type: body.get('mimetype'),
-        ownerId: c.get('user').id,
-        tags: tags
-    });
-
-    return c.json({ id: newimage.id })
+    c.header('Content-Type', image.contentType!)
+    return c.body(await contentFile.arrayBuffer())
 })
 
-router.delete('/image/:id', async (c) => {
-    const { id: imageId } = c.req.param()
+router.get('/', async (c) => {
+    const payload = c.get('jwtPayload');
 
-    await db.delete(images).where(and(eq('id', imageId), eq('ownerId', req.user.id)))
-
-    return c.text("Image Deleted");
-})
-
-router.get('/ownerimages', async (c) => {
-    // todo: make it a middleware
-    if (!req.user) {
-        c.status(401)
-        return c.json({ message: 'Invalid token' });
-    }
-
-    const imageList = await db.select().from(images).where(eq('ownerId', req.user.id))
+    const imageList = await db.select().from(images).where(eq(images.ownerId, payload.id))
 
     return c.json({ images: imageList.map(image => image.id) })
 })
 
-router.get('/ownerimage/:id', async (c) => {
-    if (!req.user) {
-        c.status(401)
-        return c.json({ message: 'Invalid token' });
-    }
+router.get('/:id', async (c) => {
+    const payload = c.get('jwtPayload');
 
     const { id: imageId } = c.req.param()
 
-    const image = (await db.select().from(images).where(and(eq('id', imageId), eq('ownerId', req.user.id))))[0];
+    const image = await db.select().from(images).where(
+        and(eq(images.id, Number(imageId)), eq(images.ownerId, payload.id))
+    ).get();
 
-    c.header('Content-Type', image.mimetype)
-    // c.send(image.img.data)
-    return c.text('TODO: send image file')
+    if (!image) {
+        c.status(404)
+        return c.body(null);
+    }
+
+    const contentFile = Bun.file(`${IMAGES_DIR}/${image.contentHash}`);
+
+    c.header('Content-Type', image.contentType!)
+    return c.body(await contentFile.arrayBuffer())
+})
+
+router.post('/', async (c) => {
+    const payload = c.get('jwtPayload');
+
+    const body = await c.req.formData();
+
+    const uploadedFile = body.get('file') as File;
+
+    if (!uploadedFile) {
+        c.status(400)
+        return c.body(null);
+    }
+
+    const tags = body.get('tags') as string;
+
+    // save image to IMAGES_DIR and save image info to database
+    const contentHash = Bun.hash(await uploadedFile.arrayBuffer());
+    const contentFile = Bun.file(`${IMAGES_DIR}/${contentHash}`);
+    if (!await contentFile.exists()) {
+        await Bun.write(contentFile, uploadedFile)
+    }
+
+    const newImage = await db.insert(images).values({
+        ownerId: payload.id,
+        contentHash: String(contentHash),
+        contentType: uploadedFile.type,
+        name: basename(uploadedFile.name),
+        tags: tags
+    }).returning();
+
+    return c.json({ id: newImage[0].id })
+})
+
+router.delete('/:id', async (c) => {
+    const payload = c.get('jwtPayload');
+
+    const { id: imageId } = c.req.param()
+
+    await db.delete(images).where(and(eq(images.id, Number(imageId)), eq(images.ownerId, payload.id)))
+
+    return c.text("Image Deleted");
 })
 
 export default router

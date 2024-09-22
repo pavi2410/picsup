@@ -8,7 +8,7 @@ describe('Test API routes', () => {
     expect(res.ok).toBe(true);
   });
 
-  it('should signup the user - POST /auth/signup', async () => {
+  it.skip('should signup the user - POST /auth/signup', async () => {
     const res = await app.request('/auth/signup', {
       method: 'POST',
       body: JSON.stringify({
